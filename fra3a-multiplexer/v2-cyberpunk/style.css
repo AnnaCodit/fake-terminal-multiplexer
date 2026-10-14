@@ -188,37 +188,37 @@ html, body {
 
 .col-pid { display: inline-block; width: 48px; color: #88aa8d; }
 .col-user { display: inline-block; width: 72px; color: #d4ffd9; }
-.col-s { display: inline-block; width: 24px; color: #00ff66; text-shadow: 0 0 5px #00ff66; }
+.col-s { display: inline-block; width: 24px; color: #4ea868; }
 .col-cpu { display: inline-block; width: 56px; }
 .col-mem { display: inline-block; width: 56px; }
 .col-time { display: inline-block; width: 68px; }
 .col-cmd { display: inline-block; color: #bdf7c5; font-weight: 500; }
 
-/* Global Color Accents with CRT Phosphor Glow */
+/* Global Color Accents with Softened Phosphor */
 .highlight-green {
-  color: #00ff66;
+  color: #4ea868; /* Muted vintage matrix phosphor green */
   font-weight: 600;
-  text-shadow: 0 0 6px rgba(0, 255, 102, 0.85);
+  text-shadow: 0 0 3px rgba(78, 168, 104, 0.35);
 }
 
 .highlight-red {
-  color: #ff3344;
+  color: #d94856; /* Softened warning red */
   font-weight: 600;
-  text-shadow: 0 0 7px rgba(255, 51, 68, 0.95);
+  text-shadow: 0 0 4px rgba(217, 72, 86, 0.45);
 }
 
 .highlight-white {
-  color: #ffffff;
+  color: #e2e8e2;
   font-weight: 600;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.85);
+  text-shadow: 0 0 3px rgba(226, 232, 226, 0.4);
 }
 
 .highlight-cyan {
-  color: #33e6ff;
-  text-shadow: 0 0 6px rgba(51, 230, 255, 0.75);
+  color: #4da8b8;
+  text-shadow: 0 0 3px rgba(77, 168, 184, 0.3);
 }
 
 .highlight-yellow {
-  color: #ffdd33;
-  text-shadow: 0 0 6px rgba(255, 221, 51, 0.75);
+  color: #c9ab42;
+  text-shadow: 0 0 3px rgba(201, 171, 66, 0.3);
 }

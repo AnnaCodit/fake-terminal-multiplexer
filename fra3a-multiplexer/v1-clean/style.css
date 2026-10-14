@@ -150,7 +150,7 @@ html, body {
 .col-ni { display: inline-block; width: 32px; }
 .col-virt { display: inline-block; width: 50px; }
 .col-res { display: inline-block; width: 50px; }
-.col-s { display: inline-block; width: 22px; color: #00ff66; }
+.col-s { display: inline-block; width: 22px; color: #4ea868; }
 .col-cpu { display: inline-block; width: 48px; }
 .col-mem { display: inline-block; width: 48px; }
 .col-time { display: inline-block; width: 64px; }
@@ -158,24 +158,24 @@ html, body {
 
 /* Global Color Accents */
 .highlight-green {
-  color: #00ff66;
+  color: #4ea868;
   font-weight: 600;
 }
 
 .highlight-red {
-  color: #ff3344;
+  color: #d94856;
   font-weight: 600;
 }
 
 .highlight-white {
-  color: #ffffff;
+  color: #e2e8e2;
   font-weight: 600;
 }
 
 .highlight-cyan {
-  color: #33ccff;
+  color: #4da8b8;
 }
 
 .highlight-yellow {
-  color: #ffcc00;
+  color: #c9ab42;
 }
