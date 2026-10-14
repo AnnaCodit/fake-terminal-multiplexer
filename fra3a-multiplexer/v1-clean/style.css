@@ -19,7 +19,7 @@ html, body {
 /* 4-Column Multiplexer Grid */
 .multiplexer-grid {
   display: grid;
-  grid-template-columns: 24% 28% 24% 24%;
+  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 100vh;
   width: 100vw;
   height: 100vh;
@@ -92,12 +92,20 @@ html, body {
 /* Pane Content Area */
 .terminal-pane-content {
   flex: 1;
-  overflow-y: hidden;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: 6px 8px;
   white-space: pre-wrap;
   word-break: break-all;
   display: flex;
   flex-direction: column;
+}
+
+.terminal-pane-content::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .term-line {
