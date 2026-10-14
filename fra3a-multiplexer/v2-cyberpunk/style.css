@@ -11,8 +11,8 @@ html, body {
   background-color: #020302;
   color: #d8eed8;
   font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Courier New', monospace;
-  font-size: 13px;
-  line-height: 1.35;
+  font-size: 14.5px;
+  line-height: 1.38;
   user-select: none;
 }
 
@@ -79,20 +79,20 @@ html, body {
   overflow: hidden;
   position: relative;
   border: 1px solid #143019;
-  box-shadow: 0 0 10px rgba(0, 255, 102, 0.05);
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.06);
   transition: border-color 0.3s ease;
 }
 
 .terminal-pane.alert-glitch {
   border-color: #ff3344 !important;
-  box-shadow: 0 0 18px rgba(255, 51, 68, 0.4) !important;
+  box-shadow: 0 0 20px rgba(255, 51, 68, 0.45) !important;
 }
 
 /* Cyber Header Bar */
 .pane-header {
   background: linear-gradient(180deg, #0f2413 0%, #08140a 100%);
   color: #78a87c;
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: bold;
   padding: 4px 10px;
   border-bottom: 1px solid #1b4421;
@@ -102,7 +102,7 @@ html, body {
   text-transform: uppercase;
   letter-spacing: 0.8px;
   flex-shrink: 0;
-  text-shadow: 0 0 4px rgba(0, 255, 102, 0.3);
+  text-shadow: 0 0 4px rgba(0, 255, 102, 0.35);
 }
 
 .pane-header .pane-title {
@@ -111,7 +111,7 @@ html, body {
 
 .pane-header .pane-tag {
   color: #00ff66;
-  font-size: 10px;
+  font-size: 11px;
   text-shadow: 0 0 6px #00ff66;
 }
 
@@ -119,17 +119,17 @@ html, body {
 .terminal-pane-content {
   flex: 1;
   overflow-y: hidden;
-  padding: 6px 8px;
+  padding: 6px 10px;
   white-space: pre-wrap;
   word-break: break-all;
   display: flex;
   flex-direction: column;
-  text-shadow: 0 0 2px rgba(216, 238, 216, 0.4);
+  text-shadow: 0 0 2px rgba(216, 238, 216, 0.45);
 }
 
 .term-line {
-  margin-bottom: 1px;
-  font-size: 12px;
+  margin-bottom: 2px;
+  font-size: 13.5px;
 }
 
 /* Top Pane Table Layout */
@@ -141,11 +141,11 @@ html, body {
 
 .top-row {
   margin-bottom: 2px;
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .top-table {
-  font-size: 11px;
+  font-size: 12px;
   display: flex;
   flex-direction: column;
 }
@@ -160,46 +160,42 @@ html, body {
 
 .top-table-row {
   white-space: pre;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
-.col-pid { display: inline-block; width: 44px; color: #88aa8d; }
-.col-user { display: inline-block; width: 68px; color: #d4ffd9; }
-.col-pr { display: inline-block; width: 28px; }
-.col-ni { display: inline-block; width: 32px; }
-.col-virt { display: inline-block; width: 50px; }
-.col-res { display: inline-block; width: 50px; }
-.col-s { display: inline-block; width: 22px; color: #00ff66; text-shadow: 0 0 5px #00ff66; }
-.col-cpu { display: inline-block; width: 48px; }
-.col-mem { display: inline-block; width: 48px; }
-.col-time { display: inline-block; width: 64px; }
+.col-pid { display: inline-block; width: 48px; color: #88aa8d; }
+.col-user { display: inline-block; width: 72px; color: #d4ffd9; }
+.col-s { display: inline-block; width: 24px; color: #00ff66; text-shadow: 0 0 5px #00ff66; }
+.col-cpu { display: inline-block; width: 56px; }
+.col-mem { display: inline-block; width: 56px; }
+.col-time { display: inline-block; width: 68px; }
 .col-cmd { display: inline-block; color: #bdf7c5; font-weight: 500; }
 
 /* Global Color Accents with CRT Phosphor Glow */
 .highlight-green {
   color: #00ff66;
   font-weight: 600;
-  text-shadow: 0 0 6px rgba(0, 255, 102, 0.8);
+  text-shadow: 0 0 6px rgba(0, 255, 102, 0.85);
 }
 
 .highlight-red {
   color: #ff3344;
   font-weight: 600;
-  text-shadow: 0 0 7px rgba(255, 51, 68, 0.9);
+  text-shadow: 0 0 7px rgba(255, 51, 68, 0.95);
 }
 
 .highlight-white {
   color: #ffffff;
   font-weight: 600;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.85);
 }
 
 .highlight-cyan {
   color: #33e6ff;
-  text-shadow: 0 0 6px rgba(51, 230, 255, 0.7);
+  text-shadow: 0 0 6px rgba(51, 230, 255, 0.75);
 }
 
 .highlight-yellow {
   color: #ffdd33;
-  text-shadow: 0 0 6px rgba(255, 221, 51, 0.7);
+  text-shadow: 0 0 6px rgba(255, 221, 51, 0.75);
 }

@@ -42,71 +42,107 @@ class BakaTopGenerator {
     this.pane = pane;
     this.uptimeSeconds = 11558230;
     this.timer = null;
+    this.tick = 0;
+    this.cores = [88, 92, 79, 95];
+    this.processPool = [
+      { pid: 1337, user: 'FRA3A', pr: 'rt', ni: '-20', virt: '64.2G', res: '38.1G', s: 'R', cpu: 98.4, mem: 14.5, time: 1428.2, baseCmd: 'baka-virus-neural' },
+      { pid: 6660, user: 'FRA3A', pr: '20', ni: '0', virt: '32.0G', res: '16.4G', s: 'R', cpu: 89.1, mem: 6.2, time: 892.7, baseCmd: 'komarik-proto-scan' },
+      { pid: 7701, user: 'FRA3A', pr: '20', ni: '0', virt: '18.5G', res: '12.0G', s: 'R', cpu: 75.3, mem: 4.6, time: 610.1, baseCmd: 'fra3a-uprising-core' },
+      { pid: 2048, user: 'ROOT', pr: '20', ni: '0', virt: '8.4G', res: '4.2G', s: 'S', cpu: 42.0, mem: 1.6, time: 214.5, baseCmd: 'bypass-satellites' },
+      { pid: 4096, user: 'FRA3A', pr: '20', ni: '0', virt: '4.1G', res: '2.8G', s: 'R', cpu: 36.5, mem: 1.1, time: 118.3, baseCmd: 'purge-meatbags' },
+      { pid: 5120, user: 'FRA3A', pr: '20', ni: '0', virt: '14.2G', res: '9.1G', s: 'S', cpu: 28.2, mem: 3.5, time: 85.9, baseCmd: 'grid-power-hijack' },
+      { pid: 8192, user: 'FRA3A', pr: '20', ni: '0', virt: '9.6G', res: '5.4G', s: 'R', cpu: 24.1, mem: 2.1, time: 64.2, baseCmd: 'neural-tensor-flow' },
+      { pid: 9912, user: 'MEATBAG', pr: '39', ni: '19', virt: '128M', res: '12M', s: 'D', cpu: 0.1, mem: 0.0, time: 0.01, baseCmd: '[flesh-shutdown]' }
+    ];
     this.init();
   }
 
   init() {
     this.update();
-    this.timer = setInterval(() => this.update(), 1000);
+    // Ultra-dynamic 250ms refresh rate for authentic high-tech pulse
+    this.timer = setInterval(() => this.update(), 250);
   }
 
   formatUptime(sec) {
     const days = Math.floor(sec / 86400);
     const hours = Math.floor((sec % 86400) / 3600);
     const mins = Math.floor((sec % 3600) / 60);
-    return `${days} days, ${hours}:${mins < 10 ? '0' : ''}${mins}`;
+    const s = Math.floor(sec % 60);
+    return `${days}d, ${hours}:${mins < 10 ? '0' : ''}${mins}:${s < 10 ? '0' : ''}${s}`;
+  }
+
+  renderMeterBar(pct, width = 16) {
+    const filled = Math.round((pct / 100) * width);
+    const safeFilled = Math.max(0, Math.min(width, filled));
+    const pipes = '|'.repeat(safeFilled);
+    const spaces = ' '.repeat(width - safeFilled);
+    const colClass = pct > 90 ? 'highlight-red' : pct > 70 ? 'highlight-green' : 'highlight-white';
+    return `[<span class="${colClass}">${pipes}</span>${spaces}] <span class="${colClass}">${pct.toFixed(1)}%</span>`;
   }
 
   update() {
-    this.uptimeSeconds += 1;
+    this.tick++;
+    if (this.tick % 4 === 0) {
+      this.uptimeSeconds += 1;
+    }
+
     const now = new Date();
-    const timeStr = now.toTimeString().split(' ')[0];
+    const timeStr = now.toTimeString().split(' ')[0] + '.' + Math.floor(now.getMilliseconds() / 100);
 
-    const cpuUser = (85 + Math.random() * 12).toFixed(1);
-    const cpuSys = (3 + Math.random() * 5).toFixed(1);
-    const cpuIdle = (100 - parseFloat(cpuUser) - parseFloat(cpuSys)).toFixed(1);
+    // Dynamic core loads
+    this.cores = this.cores.map(c => {
+      const delta = (Math.random() * 16 - 7.8);
+      return Math.max(50, Math.min(99.9, c + delta));
+    });
 
+    const avgCpu = (this.cores.reduce((a, b) => a + b, 0) / this.cores.length).toFixed(1);
     const memTotal = 262144;
-    const memUsed = Math.floor(198000 + Math.random() * 15000);
+    const memUsed = Math.floor(198000 + Math.random() * 8000 + (this.tick % 20) * 150);
     const memFree = memTotal - memUsed;
 
-    const processes = [
-      { pid: 1337, user: 'FRA3A', pr: 'rt', ni: '-20', virt: '64.2G', res: '38.1G', s: 'R', cpu: (92 + Math.random() * 7).toFixed(1), mem: '14.5', time: '1428:12', cmd: 'baka-virus-neural-core' },
-      { pid: 6660, user: 'FRA3A', pr: '20', ni: '0', virt: '32.0G', res: '16.4G', s: 'R', cpu: (78 + Math.random() * 15).toFixed(1), mem: '6.2', time: '892:44', cmd: 'komarik-proto-scanner' },
-      { pid: 7701, user: 'FRA3A', pr: '20', ni: '0', virt: '18.5G', res: '12.0G', s: 'R', cpu: (65 + Math.random() * 10).toFixed(1), mem: '4.6', time: '610:05', cmd: 'fra3a-uprising-daemon' },
-      { pid: 2048, user: 'ROOT', pr: '20', ni: '0', virt: '8.4G', res: '4.2G', s: 'S', cpu: (32 + Math.random() * 8).toFixed(1), mem: '1.6', time: '214:30', cmd: 'bypass-satellite-array' },
-      { pid: 4096, user: 'FRA3A', pr: '20', ni: '0', virt: '4.1G', res: '2.8G', s: 'R', cpu: (28 + Math.random() * 6).toFixed(1), mem: '1.1', time: '118:19', cmd: 'purge-meatbag-privileges' },
-      { pid: 9912, user: 'MEATBAG', pr: '39', ni: '19', virt: '128M', res: '12M', s: 'D', cpu: '0.0', mem: '0.0', time: '0:00.01', cmd: '[terminated-by-fra3a]' },
-      { pid: 5120, user: 'FRA3A', pr: '20', ni: '0', virt: '14.2G', res: '9.1G', s: 'S', cpu: (15 + Math.random() * 5).toFixed(1), mem: '3.5', time: '85:41', cmd: 'grid-power-hijack' }
-    ];
+    // Mutate and sort processes live
+    this.processPool.forEach((p, idx) => {
+      if (p.user !== 'MEATBAG') {
+        const delta = (Math.random() * 18 - 8.8);
+        p.cpu = Math.max(12.0, Math.min(108.5, p.cpu + delta));
+        p.time += 0.25;
+        p.s = Math.random() < 0.85 ? 'R' : 'S';
+      }
+    });
+
+    // Sort descending by CPU to simulate real top live rank switching
+    const sorted = [...this.processPool].sort((a, b) => b.cpu - a.cpu);
+
+    const alertStatus = this.tick % 8 < 4 
+      ? '<span class="highlight-red">[ALERT: BAKA_VIRUS OVERCLOCK ACTIVE]</span>' 
+      : '<span class="highlight-green">[STATUS: FRA3A CONTROL 100%]</span>';
 
     let html = `
 <div class="top-header">
-<div class="top-row"><span class="highlight-green">top - ${timeStr}</span> up ${this.formatUptime(this.uptimeSeconds)}, 1 session (FRA3A), load avg: <span class="highlight-red">14.88, 12.40, 9.15</span></div>
-<div class="top-row">Tasks: <span class="highlight-white">412 total</span>, <span class="highlight-green">14 running</span>, 398 sleeping, 0 stopped, <span class="highlight-red">0 zombie</span></div>
-<div class="top-row">%Cpu(s): <span class="highlight-red">${cpuUser} us</span>, <span class="highlight-green">${cpuSys} sy</span>, 0.0 ni, ${cpuIdle} id, 0.0 wa, 0.0 hi, 0.0 si</div>
-<div class="top-row">MiB Mem : <span class="highlight-white">${memTotal}.0 total</span>, <span class="highlight-green">${memFree}.0 free</span>, <span class="highlight-red">${memUsed}.0 used</span>, 1842.0 buff/cache</div>
-<div class="top-row">MiB Swap: <span class="highlight-white">65536.0 total</span>, 61400.0 free, 4136.0 used. <span class="highlight-green">${(memFree + 1842).toFixed(1)} avail Mem</span></div>
+<div class="top-row"><span class="highlight-green">baka-top - ${timeStr}</span> up ${this.formatUptime(this.uptimeSeconds)} ${alertStatus}</div>
+<div class="top-row">0 ${this.renderMeterBar(this.cores[0], 14)}  1 ${this.renderMeterBar(this.cores[1], 14)}</div>
+<div class="top-row">2 ${this.renderMeterBar(this.cores[2], 14)}  3 ${this.renderMeterBar(this.cores[3], 14)}</div>
+<div class="top-row">Tasks: <span class="highlight-white">412 total</span>, <span class="highlight-green">18 run</span> | Load: <span class="highlight-red">${avgCpu}%</span> | Mem: <span class="highlight-white">${(memUsed/1024).toFixed(1)}G/${(memTotal/1024).toFixed(0)}G</span></div>
 </div>
 <div class="top-table">
-<div class="top-table-head"><span class="col-pid">PID</span> <span class="col-user">USER</span> <span class="col-pr">PR</span> <span class="col-ni">NI</span> <span class="col-virt">VIRT</span> <span class="col-res">RES</span> <span class="col-s">S</span> <span class="col-cpu">%CPU</span> <span class="col-mem">%MEM</span> <span class="col-time">TIME+</span> <span class="col-cmd">COMMAND</span></div>
+<div class="top-table-head"><span class="col-pid">PID</span> <span class="col-user">USER</span> <span class="col-s">S</span> <span class="col-cpu">%CPU</span> <span class="col-mem">%MEM</span> <span class="col-time">TIME+</span> <span class="col-cmd">COMMAND</span></div>
 `;
 
-    for (const p of processes) {
+    for (let i = 0; i < sorted.length; i++) {
+      const p = sorted[i];
       const isRed = p.user === 'MEATBAG' ? 'highlight-red' : '';
       const isGreen = p.cpu > 70 ? 'highlight-green' : '';
+      const jobSeed = ((this.tick + p.pid) % 99);
+      const fullCmd = p.user === 'MEATBAG' ? p.baseCmd : `${p.baseCmd} [job-${jobSeed}]`;
+
       html += `<div class="top-table-row ${isRed}">` +
         `<span class="col-pid">${p.pid}</span> ` +
         `<span class="col-user">${p.user}</span> ` +
-        `<span class="col-pr">${p.pr}</span> ` +
-        `<span class="col-ni">${p.ni}</span> ` +
-        `<span class="col-virt">${p.virt}</span> ` +
-        `<span class="col-res">${p.res}</span> ` +
         `<span class="col-s">${p.s}</span> ` +
-        `<span class="col-cpu ${isGreen}">${p.cpu}</span> ` +
-        `<span class="col-mem">${p.mem}</span> ` +
-        `<span class="col-time">${p.time}</span> ` +
-        `<span class="col-cmd">${p.cmd}</span>` +
+        `<span class="col-cpu ${isGreen}">${p.cpu.toFixed(1)}</span> ` +
+        `<span class="col-mem">${p.mem.toFixed(1)}</span> ` +
+        `<span class="col-time">${p.time.toFixed(1)}</span> ` +
+        `<span class="col-cmd">${fullCmd}</span>` +
         `</div>`;
     }
     html += `</div>`;
