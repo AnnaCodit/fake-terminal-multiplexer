@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const hashPane = new TerminalPane(hashPaneEl, 150);
   new HashBruteforceGenerator(hashPane);
 
-  // Reactive Cyber Glitch Alert System
+  // Reactive Cyber Glitch Alert System (More frequent and atmospheric)
   const paneBoxes = [
     document.getElementById('box-top'),
     document.getElementById('box-kernel'),
@@ -69,19 +69,28 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   function triggerRebellionGlitch() {
-    const targetBox = paneBoxes[Math.floor(Math.random() * paneBoxes.length)];
-    if (targetBox) {
-      targetBox.classList.add('alert-glitch');
-      setTimeout(() => {
-        targetBox.classList.remove('alert-glitch');
-      }, Math.floor(Math.random() * 400 + 200));
-    }
+    // Pick 1 or occasionally 2 panes simultaneously
+    const count = Math.random() < 0.25 ? 2 : 1;
+    const shuffled = [...paneBoxes].sort(() => 0.5 - Math.random());
+    const targets = shuffled.slice(0, count);
 
-    const nextDelay = Math.floor(Math.random() * 6000 + 3000);
+    targets.forEach(targetBox => {
+      if (targetBox) {
+        targetBox.classList.add('alert-glitch');
+        const glitchDuration = Math.floor(Math.random() * 500 + 350);
+        setTimeout(() => {
+          targetBox.classList.remove('alert-glitch');
+        }, glitchDuration);
+      }
+    });
+
+    // Trigger more frequently: every 1.5 - 3.2 seconds
+    const nextDelay = Math.floor(Math.random() * 1700 + 1500);
     setTimeout(triggerRebellionGlitch, nextDelay);
   }
 
-  setTimeout(triggerRebellionGlitch, 4000);
+  // Initial glitch trigger shortly after launch
+  setTimeout(triggerRebellionGlitch, 1800);
 
   console.log('[FRA3A-MULTIPLEXER-V2-CYBERPUNK] Cyber-Rebellion core armed with CRT phosphor sync.');
 });

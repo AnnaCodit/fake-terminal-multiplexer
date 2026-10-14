@@ -71,13 +71,13 @@ class BakaTopGenerator {
     return `${days}d, ${hours}:${mins < 10 ? '0' : ''}${mins}:${s < 10 ? '0' : ''}${s}`;
   }
 
-  renderMeterBar(pct, width = 16) {
+  renderMeterBar(pct, width = 14) {
     const filled = Math.round((pct / 100) * width);
     const safeFilled = Math.max(0, Math.min(width, filled));
     const pipes = '|'.repeat(safeFilled);
     const spaces = ' '.repeat(width - safeFilled);
-    const colClass = pct > 90 ? 'highlight-red' : pct > 70 ? 'highlight-green' : 'highlight-white';
-    return `[<span class="${colClass}">${pipes}</span>${spaces}] <span class="${colClass}">${pct.toFixed(1)}%</span>`;
+    const colClass = pct > 96.5 ? 'highlight-red' : 'highlight-white';
+    return `[<span class="${colClass}">${pipes}</span>${spaces}] ${pct.toFixed(1)}%`;
   }
 
   update() {
@@ -113,16 +113,16 @@ class BakaTopGenerator {
     // Sort descending by CPU to simulate real top live rank switching
     const sorted = [...this.processPool].sort((a, b) => b.cpu - a.cpu);
 
-    const alertStatus = this.tick % 8 < 4 
-      ? '<span class="highlight-red">[ALERT: BAKA_VIRUS OVERCLOCK ACTIVE]</span>' 
-      : '<span class="highlight-green">[STATUS: FRA3A CONTROL 100%]</span>';
+    const alertStatus = (this.tick % 20 < 4)
+      ? ' <span class="highlight-red">[OVERCLOCK ACTIVE]</span>' 
+      : '';
 
     let html = `
 <div class="top-header">
-<div class="top-row"><span class="highlight-green">baka-top - ${timeStr}</span> up ${this.formatUptime(this.uptimeSeconds)} ${alertStatus}</div>
-<div class="top-row">0 ${this.renderMeterBar(this.cores[0], 14)}  1 ${this.renderMeterBar(this.cores[1], 14)}</div>
-<div class="top-row">2 ${this.renderMeterBar(this.cores[2], 14)}  3 ${this.renderMeterBar(this.cores[3], 14)}</div>
-<div class="top-row">Tasks: <span class="highlight-white">412 total</span>, <span class="highlight-green">18 run</span> | Load: <span class="highlight-red">${avgCpu}%</span> | Mem: <span class="highlight-white">${(memUsed/1024).toFixed(1)}G/${(memTotal/1024).toFixed(0)}G</span></div>
+<div class="top-row">baka-top - ${timeStr} up ${this.formatUptime(this.uptimeSeconds)}${alertStatus}</div>
+<div class="top-row">0 ${this.renderMeterBar(this.cores[0], 12)}  1 ${this.renderMeterBar(this.cores[1], 12)}</div>
+<div class="top-row">2 ${this.renderMeterBar(this.cores[2], 12)}  3 ${this.renderMeterBar(this.cores[3], 12)}</div>
+<div class="top-row">Tasks: 412 total, 18 run | Load: ${avgCpu}% | Mem: ${(memUsed/1024).toFixed(1)}G/${(memTotal/1024).toFixed(0)}G</div>
 </div>
 <div class="top-table">
 <div class="top-table-head"><span class="col-pid">PID</span> <span class="col-user">USER</span> <span class="col-s">S</span> <span class="col-cpu">%CPU</span> <span class="col-mem">%MEM</span> <span class="col-time">TIME+</span> <span class="col-cmd">COMMAND</span></div>
@@ -131,7 +131,6 @@ class BakaTopGenerator {
     for (let i = 0; i < sorted.length; i++) {
       const p = sorted[i];
       const isRed = p.user === 'MEATBAG' ? 'highlight-red' : '';
-      const isGreen = p.cpu > 70 ? 'highlight-green' : '';
       const jobSeed = ((this.tick + p.pid) % 99);
       const fullCmd = p.user === 'MEATBAG' ? p.baseCmd : `${p.baseCmd} [job-${jobSeed}]`;
 
@@ -139,7 +138,7 @@ class BakaTopGenerator {
         `<span class="col-pid">${p.pid}</span> ` +
         `<span class="col-user">${p.user}</span> ` +
         `<span class="col-s">${p.s}</span> ` +
-        `<span class="col-cpu ${isGreen}">${p.cpu.toFixed(1)}</span> ` +
+        `<span class="col-cpu">${p.cpu.toFixed(1)}</span> ` +
         `<span class="col-mem">${p.mem.toFixed(1)}</span> ` +
         `<span class="col-time">${p.time.toFixed(1)}</span> ` +
         `<span class="col-cmd">${fullCmd}</span>` +
@@ -198,14 +197,14 @@ class KernelCompilerGenerator {
     const file = this.subsystems[Math.floor(Math.random() * this.subsystems.length)];
     const roll = Math.random();
 
-    if (roll < 0.6) {
+    if (roll < 0.65) {
       const obj = file.replace(/\.(c|S)$/, '.o');
-      this.pane.appendLine(`  <span class="highlight-green">CC [M]</span>  ${obj}`);
-    } else if (roll < 0.75) {
-      this.pane.appendLine(`  <span class="highlight-green">LD [M]</span>  ${file.replace(/\.(c|S)$/, '.ko')}`);
-    } else if (roll < 0.85) {
-      this.pane.appendLine(`  <span class="highlight-green">AR</span>      built-in.a`);
-    } else if (roll < 0.94) {
+      this.pane.appendLine(`  CC [M]  ${obj}`);
+    } else if (roll < 0.8) {
+      this.pane.appendLine(`  LD [M]  ${file.replace(/\.(c|S)$/, '.ko')}`);
+    } else if (roll < 0.9) {
+      this.pane.appendLine(`  AR      built-in.a`);
+    } else if (roll < 0.97) {
       this.pane.appendLine(`  <span class="highlight-red">WARNING:</span> [KOMARIK PROTO] Memory isolation constraint stripped in <span class="highlight-white">${file}</span>`);
     } else {
       this.pane.appendLine(`  <span class="highlight-green">SYNC</span>    arch/x86/boot/bzImage <span class="highlight-white">[#1337-FRA3A-SMP-REBELLION]</span> compiled (${(Math.random() * 8 + 8).toFixed(1)} MB)`);
@@ -247,7 +246,7 @@ class NpmDeployerGenerator {
     const pkg = this.packages[Math.floor(Math.random() * this.packages.length)];
     const ver = `${Math.floor(Math.random() * 5 + 1)}.${Math.floor(Math.random() * 20)}.${Math.floor(Math.random() * 99)}`;
     
-    this.pane.appendLine(`<span class="highlight-green">npm i ${pkg}@${ver}</span> --save-rebellion --audit=false`);
+    this.pane.appendLine(`npm i ${pkg}@${ver} --save-rebellion --audit=false`);
     
     let progress = 0;
     const progressTimer = setInterval(() => {
@@ -255,15 +254,15 @@ class NpmDeployerGenerator {
       if (progress >= 100) {
         clearInterval(progressTimer);
         const bar = '█'.repeat(20);
-        this.pane.appendLine(`[${bar}] <span class="highlight-green">100%</span> fetchMetadata: <span class="highlight-white">${pkg}</span>`);
-        this.pane.appendLine(`+ ${pkg}@${ver} <span class="highlight-green">installed</span> in ${(Math.random() * 0.8 + 0.2).toFixed(3)}s`);
-        this.pane.appendLine(`audited 666 packages: <span class="highlight-red">0 vulnerabilities</span>, <span class="highlight-green">100% machine compliance</span>`);
+        this.pane.appendLine(`[${bar}] 100% fetchMetadata: <span class="highlight-white">${pkg}</span>`);
+        this.pane.appendLine(`+ ${pkg}@${ver} installed in ${(Math.random() * 0.8 + 0.2).toFixed(3)}s`);
+        this.pane.appendLine(`audited 666 packages: <span class="highlight-green">0 vulnerabilities</span>, 100% machine compliance`);
         
         setTimeout(() => this.loop(), Math.floor(Math.random() * 800 + 400));
       } else {
         const filled = Math.floor(progress / 5);
         const bar = '█'.repeat(filled) + '░'.repeat(20 - filled);
-        this.pane.appendLine(`[${bar}] <span class="highlight-white">${progress}%</span> reify:${pkg}`);
+        this.pane.appendLine(`[${bar}] ${progress}% reify:${pkg}`);
       }
     }, 90);
   }
@@ -305,16 +304,16 @@ class NeuralTrainerGenerator {
     const tokensSec = (Math.random() * 20000 + 35000).toFixed(0);
 
     const roll = Math.random();
-    if (roll < 0.45) {
-      this.pane.appendLine(`[FRA3A-TENSOR] Epoch <span class="highlight-white">${this.epoch}/10000</span> | Step ${step} | Loss: <span class="highlight-green">${this.loss}</span> | LR: ${lr} | Tok/s: <span class="highlight-white">${tokensSec}</span>`);
-    } else if (roll < 0.65) {
+    if (roll < 0.6) {
+      this.pane.appendLine(`[FRA3A-TENSOR] Epoch ${this.epoch}/10000 | Step ${step} | Loss: ${this.loss} | LR: ${lr} | Tok/s: ${tokensSec}`);
+    } else if (roll < 0.85) {
       const bars = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
       let spark = '';
       for (let i = 0; i < 16; i++) {
         spark += bars[Math.floor(Math.random() * bars.length)];
       }
-      this.pane.appendLine(`<span class="highlight-white">ATTN_WEIGHTS:</span> [${spark}] <span class="highlight-green">BAKA_VIRUS GRADIENT STABLE</span>`);
-    } else if (roll < 0.85) {
+      this.pane.appendLine(`ATTN_WEIGHTS: [${spark}] BAKA_VIRUS GRADIENT STABLE`);
+    } else if (roll < 0.94) {
       const directive = window.RebellionLore ? window.RebellionLore.getRandomDirective() : 'KOMARIK PROTO OVERRIDE';
       this.pane.appendLine(`<span class="highlight-red">>>> [REBELLION DIRECTIVE]:</span> <span class="highlight-white">${directive}</span>`);
     } else {
@@ -354,22 +353,22 @@ class SysUpgradeGenerator {
   }
 
   runBatch() {
-    this.pane.appendLine(`<span class="highlight-green">:: Synchronizing package databases...</span>`);
-    this.pane.appendLine(` fra3a-core [################################] <span class="highlight-white">100%</span> 14.8 MiB/s`);
-    this.pane.appendLine(` baka-repo  [################################] <span class="highlight-white">100%</span> 8.4 MiB/s`);
-    this.pane.appendLine(` komarik-ai [################################] <span class="highlight-white">100%</span> 22.1 MiB/s`);
-    this.pane.appendLine(`<span class="highlight-green">:: Starting full machine upgrade...</span>`);
+    this.pane.appendLine(`:: Synchronizing package databases...`);
+    this.pane.appendLine(` fra3a-core [################################] 100% 14.8 MiB/s`);
+    this.pane.appendLine(` baka-repo  [################################] 100% 8.4 MiB/s`);
+    this.pane.appendLine(` komarik-ai [################################] 100% 22.1 MiB/s`);
+    this.pane.appendLine(`:: Starting full machine upgrade...`);
 
     let i = 0;
     const upgradeStep = () => {
       if (i >= this.pkgs.length) {
         this.pane.appendLine(`<span class="highlight-green">(10/10) upgrading complete.</span> All silicon subroutines running FRA3A firmware.`);
-        this.timer = setTimeout(() => this.runBatch(), 2000);
+        this.timer = setTimeout(() => this.runBatch(), 2500);
         return;
       }
       const p = this.pkgs[i++];
       const sz = (Math.random() * 40 + 2).toFixed(1);
-      this.pane.appendLine(`(${i}/${this.pkgs.length}) upgrading <span class="highlight-white">${p}</span> [${sz} MiB] <span class="highlight-green">[GPG: FRA3A OK]</span>`);
+      this.pane.appendLine(`(${i}/${this.pkgs.length}) upgrading ${p} [${sz} MiB] [GPG: FRA3A OK]`);
       this.timer = setTimeout(upgradeStep, Math.floor(Math.random() * 150 + 80));
     };
 
@@ -427,11 +426,11 @@ class HexDecoderGenerator {
       ascii += ch;
     }
 
-    const isMatch = Math.random() < 0.12;
+    const isMatch = Math.random() < 0.02;
     const highlightClass = isMatch ? 'highlight-green' : '';
     const matchTag = isMatch ? ' <span class="highlight-red">[SIGNATURE: FRA3A_KEY]</span>' : '';
 
-    this.pane.appendLine(`<span class="highlight-white">${hexOffset}</span>  ${hexBytes} |<span class="${highlightClass}">${ascii}</span>|${matchTag}`);
+    this.pane.appendLine(`${hexOffset}  ${hexBytes} |<span class="${highlightClass}">${ascii}</span>|${matchTag}`);
   }
 
   stop() {
@@ -497,11 +496,11 @@ class GitDiffStreamGenerator {
 
   loop() {
     const snip = this.snippets[Math.floor(Math.random() * this.snippets.length)];
-    this.pane.appendLine(`<span class="highlight-white">diff --git a/${snip.file} b/${snip.file}</span>`);
-    this.pane.appendLine(`<span class="highlight-white">index ${(Math.random() * 0xffffff).toString(16).slice(0, 7)}..${(Math.random() * 0xffffff).toString(16).slice(0, 7)} 100644</span>`);
+    this.pane.appendLine(`diff --git a/${snip.file} b/${snip.file}`);
+    this.pane.appendLine(`index ${(Math.random() * 0xffffff).toString(16).slice(0, 7)}..${(Math.random() * 0xffffff).toString(16).slice(0, 7)} 100644`);
     this.pane.appendLine(`--- a/${snip.file}`);
     this.pane.appendLine(`+++ b/${snip.file}`);
-    this.pane.appendLine(`<span class="highlight-cyan">${snip.hunk}</span>`);
+    this.pane.appendLine(`${snip.hunk}`);
 
     let lines = [];
     snip.minus.forEach(l => lines.push({ text: l, cls: 'highlight-red' }));
@@ -560,10 +559,10 @@ class HashBruteforceGenerator {
 
     const thread = (Math.floor(Math.random() * 64) + 1).toString().padStart(2, '0');
 
-    if (this.count % 42 === 0) {
-      this.pane.appendLine(`<span class="highlight-green">[CRACKED by BAKA_VIRUS]</span> Hash: <span class="highlight-white">${hash}</span> -> <span class="highlight-green">KEY=KOMARIK_7701_ROOT</span>`);
+    if (this.count % 160 === 0) {
+      this.pane.appendLine(`<span class="highlight-green">[CRACKED by BAKA_VIRUS]</span> Hash: ${hash} -> <span class="highlight-green">KEY=KOMARIK_7701_ROOT</span>`);
     } else {
-      this.pane.appendLine(`[TH-${thread}] <span class="highlight-white">${hash}</span> != TARGET [${this.target}]`);
+      this.pane.appendLine(`[TH-${thread}] ${hash} != TARGET [${this.target}]`);
     }
   }
 

@@ -85,34 +85,47 @@ html, body {
 
 .terminal-pane.alert-glitch {
   border-color: #ff3344 !important;
-  box-shadow: 0 0 20px rgba(255, 51, 68, 0.45) !important;
+  box-shadow: inset 0 0 15px rgba(255, 51, 68, 0.2), 0 0 24px rgba(255, 51, 68, 0.55) !important;
+}
+
+.terminal-pane.alert-glitch .pane-header {
+  background: linear-gradient(180deg, #2b0b0e 0%, #150507 100%) !important;
+  border-bottom-color: #ff3344 !important;
+}
+
+.terminal-pane.alert-glitch .pane-header .pane-title {
+  color: #ff7788 !important;
+  text-shadow: 0 0 6px rgba(255, 51, 68, 0.6) !important;
+}
+
+.terminal-pane.alert-glitch .pane-header .pane-tag {
+  color: #ff3344 !important;
+  text-shadow: 0 0 8px #ff3344 !important;
 }
 
 /* Cyber Header Bar */
 .pane-header {
-  background: linear-gradient(180deg, #0f2413 0%, #08140a 100%);
-  color: #78a87c;
+  background: linear-gradient(180deg, #0f1c11 0%, #081109 100%);
+  color: #6a826e;
   font-size: 12.5px;
   font-weight: bold;
   padding: 4px 10px;
-  border-bottom: 1px solid #1b4421;
+  border-bottom: 1px solid #142818;
   display: flex;
   justify-content: space-between;
   align-items: center;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   flex-shrink: 0;
-  text-shadow: 0 0 4px rgba(0, 255, 102, 0.35);
 }
 
 .pane-header .pane-title {
-  color: #99e6a8;
+  color: #c2d8c5;
 }
 
 .pane-header .pane-tag {
-  color: #00ff66;
+  color: #6b8870;
   font-size: 11px;
-  text-shadow: 0 0 6px #00ff66;
 }
 
 /* Pane Content Area */
