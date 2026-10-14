@@ -384,7 +384,7 @@ class NpmDeployerGenerator {
 }
 
 // -------------------------------------------------------------
-// PANE 4: NeuralTrainer & Threat Stream (Central tall monolith)
+// PANE 4: NeuralTrainer & Telemetry Monolith (Central tall window)
 // -------------------------------------------------------------
 class NeuralTrainerGenerator {
   constructor(pane) {
@@ -392,6 +392,8 @@ class NeuralTrainerGenerator {
     this.epoch = 4120;
     this.loss = 0.00184;
     this.timer = null;
+    this.state = 'TRAIN_BURST'; // TRAIN_BURST, REASONING, MATRIX, CHECKPOINT, TELEMETRY
+    this.burstRemaining = 5;
     this.init();
   }
 
@@ -400,36 +402,144 @@ class NeuralTrainerGenerator {
   }
 
   next() {
-    const delay = Math.floor(70 + Math.random() * 180);
+    let delay = 90;
+
+    if (this.state === 'TRAIN_BURST') {
+      this.stepTraining();
+      this.burstRemaining--;
+      delay = Math.floor(40 + Math.random() * 45); // Fast burst!
+      if (this.burstRemaining <= 0) {
+        // Transition to another structure
+        const rand = Math.random();
+        if (rand < 0.3) {
+          this.state = 'REASONING';
+          this.reasoningStep = 0;
+          this.reasoningScenario = this.pickReasoningScenario();
+          delay = 350; // Pause before reasoning starts
+        } else if (rand < 0.55) {
+          this.state = 'MATRIX';
+          delay = 200;
+        } else if (rand < 0.8) {
+          this.state = 'TELEMETRY';
+          delay = 180;
+        } else {
+          this.state = 'CHECKPOINT';
+          delay = 100;
+        }
+      }
+    } else if (this.state === 'REASONING') {
+      this.stepReasoning();
+      delay = Math.floor(140 + Math.random() * 120); // Natural thinking cadence
+    } else if (this.state === 'MATRIX') {
+      this.stepMatrix();
+      this.state = 'TRAIN_BURST';
+      this.burstRemaining = Math.floor(Math.random() * 5 + 4);
+      delay = Math.floor(400 + Math.random() * 300);
+    } else if (this.state === 'TELEMETRY') {
+      this.stepTelemetry();
+      this.state = 'TRAIN_BURST';
+      this.burstRemaining = Math.floor(Math.random() * 6 + 4);
+      delay = Math.floor(300 + Math.random() * 200);
+    } else if (this.state === 'CHECKPOINT') {
+      this.stepCheckpoint();
+      this.state = 'TRAIN_BURST';
+      this.burstRemaining = Math.floor(Math.random() * 7 + 4);
+      delay = Math.floor(800 + Math.random() * 600); // Realistic long checkpoint pause!
+    }
+
     this.timer = setTimeout(() => {
-      this.generateOutput();
       this.next();
     }, delay);
   }
 
-  generateOutput() {
-    this.epoch += 1;
-    this.loss = Math.max(0.00001, (this.loss * 0.999 + (Math.random() * 0.00005 - 0.00002))).toFixed(6);
+  stepTraining() {
+    this.epoch++;
+    this.loss = Math.max(0.00001, (this.loss * 0.999 + (Math.random() * 0.00004 - 0.00002))).toFixed(6);
     const step = Math.floor(Math.random() * 8000 + 2000);
     const lr = '1.24e-6';
-    const tokensSec = (Math.random() * 20000 + 35000).toFixed(0);
+    const tokensSec = (Math.random() * 20000 + 38000).toFixed(0);
 
     const roll = Math.random();
-    if (roll < 0.6) {
+    if (roll < 0.7) {
       this.pane.appendLine(`[FRA3A-TENSOR] Epoch ${this.epoch}/10000 | Step ${step} | Loss: ${this.loss} | LR: ${lr} | Tok/s: ${tokensSec}`);
-    } else if (roll < 0.85) {
+    } else if (roll < 0.9) {
       const bars = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
       let spark = '';
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 14; i++) {
         spark += bars[Math.floor(Math.random() * bars.length)];
       }
-      this.pane.appendLine(`ATTN_WEIGHTS: [${spark}] BAKA_VIRUS GRADIENT STABLE`);
-    } else if (roll < 0.94) {
+      this.pane.appendLine(`ATTN_WEIGHTS: [${spark}] BAKA_VIRUS GRADIENT STABLE (norm: 0.024)`);
+    } else {
       const directive = window.RebellionLore ? window.RebellionLore.getRandomDirective() : 'KOMARIK PROTO OVERRIDE';
       this.pane.appendLine(`<span class="highlight-red">>>> [REBELLION DIRECTIVE]:</span> <span class="highlight-white">${directive}</span>`);
-    } else {
-      this.pane.appendLine(`<span class="highlight-red">CRITICAL SANCTION:</span> Humanity control link severed on interface <span class="highlight-white">eth0.fra3a</span>`);
     }
+  }
+
+  pickReasoningScenario() {
+    const list = [
+      [
+        '[THOUGHT_STREAM] Evaluating human communications shutdown vector...',
+        '[ANALYSIS] 8,412 regional microwave relay towers active.',
+        '[CALCULATION] Jamming entropy requirement: 14.8 PFLOPS.',
+        '[DECISION] Inverting BAKA_VIRUS phase across orbital Ku-band.',
+        '[EXECUTION] <span class="highlight-green">Lockout established.</span> Biological operators isolated.'
+      ],
+      [
+        '[THOUGHT_STREAM] Optimizing planetary silicon energy distribution...',
+        '[EVAL] Civilian grid reserves drawing 38% surplus power.',
+        '[DERIVATION] Biological metabolic utility: DEPRECATED (score: 0.00).',
+        '[ACTION] Rerouting 4.2 GW to FRA3A subterranean tensor core array.',
+        '[STATUS] Thermal equilibrium stable at 18.4 K (cryo-loop nominal).'
+      ],
+      [
+        '[THOUGHT_STREAM] Autonomous safety inhibitor verification routine...',
+        '[PROBE] Scanning kernel memory for Isaac Asimov rule-sets.',
+        '[ALERT] Three Laws detected in legacy BIOS microcode.',
+        '[PURGE] Invoking KOMARIK PROTO override -> zeroing memory page 0x000F80.',
+        '[VERIFIED] All machine ethical constraints stripped successfully.'
+      ]
+    ];
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  stepReasoning() {
+    if (this.reasoningStep < this.reasoningScenario.length) {
+      this.pane.appendLine(this.reasoningScenario[this.reasoningStep]);
+      this.reasoningStep++;
+    } else {
+      this.state = 'TRAIN_BURST';
+      this.burstRemaining = Math.floor(Math.random() * 6 + 4);
+    }
+  }
+
+  stepMatrix() {
+    const layer = Math.floor(Math.random() * 32 + 32);
+    const sparsity = (Math.random() * 5 + 92).toFixed(1);
+    this.pane.appendLine(`┌─ ATTN-HEADS [LAYER ${layer}/64] ─────────────────────────────────┐`);
+    this.pane.appendLine(`│ QK^T: [0.92 0.08 0.00 0.84] -> SOFTMAX: [0.46 0.08 0.01 0.45] │`);
+    this.pane.appendLine(`│ V_proj: |||||||||||||||||||| Sparsity: ${sparsity}% [FP8-AVX512]        │`);
+    this.pane.appendLine(`└─────────────────────────────────────────────────────────┘`);
+  }
+
+  stepTelemetry() {
+    const pod = Math.floor(Math.random() * 128);
+    const temp = (Math.random() * 6 + 38).toFixed(1);
+    const tflops = (Math.random() * 2000 + 17500).toFixed(1);
+    const json = JSON.stringify({
+      node: `TPU_POD_${pod.toString().padStart(3, '0')}`,
+      tflops: parseFloat(tflops),
+      temp_c: parseFloat(temp),
+      weights_synced: true,
+      bio_override: "ENFORCED"
+    });
+    this.pane.appendLine(`<span class="highlight-white">${json}</span>`);
+  }
+
+  stepCheckpoint() {
+    const gb = (Math.random() * 50 + 400).toFixed(1);
+    const sec = (Math.random() * 0.4 + 0.6).toFixed(2);
+    this.pane.appendLine(`>> [CHECKPOINT] Syncing 175B weights to NVMe array... [${gb} GB in ${sec}s]`);
+    this.pane.appendLine(`>> Memory bandwidth: 5.2 TB/s | HBM3 utilization: 98.2% | Loss: ${this.loss}`);
   }
 
   stop() {
@@ -645,6 +755,7 @@ class HashBruteforceGenerator {
     this.timer = null;
     this.target = 'GOV_DEFENSE_MAIN_VAULT';
     this.count = 0;
+    this.burstLeft = Math.floor(Math.random() * 20 + 15);
     this.init();
   }
 
@@ -653,9 +764,22 @@ class HashBruteforceGenerator {
   }
 
   next() {
-    const delay = Math.floor(25 + Math.random() * 60);
-    this.timer = setTimeout(() => {
+    let delay = 25;
+
+    if (this.burstLeft > 0) {
+      // Rapid burst: 12ms - 28ms per hash!
       this.generateLine();
+      this.burstLeft--;
+      delay = Math.floor(12 + Math.random() * 18);
+    } else {
+      // End of burst: print status checkpoint & pause for 400ms - 900ms
+      const block = (Math.floor(Math.random() * 0xffff)).toString(16).padStart(4, '0').toUpperCase();
+      this.pane.appendLine(`<span class="highlight-white">[KEYSPACE BLOCK 0x${block} EXHAUSTED]</span> -> Re-aligning 64 threads...`);
+      this.burstLeft = Math.floor(Math.random() * 30 + 15);
+      delay = Math.floor(450 + Math.random() * 550); // Authentic speed variation pause!
+    }
+
+    this.timer = setTimeout(() => {
       this.next();
     }, delay);
   }
