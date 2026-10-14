@@ -217,54 +217,165 @@ class KernelCompilerGenerator {
 }
 
 // -------------------------------------------------------------
-// PANE 3: NpmDeployer (npm & cargo package downloader)
+// PANE 3: PackageDeployer (npm, cargo, docker & pip toolchain streams)
 // -------------------------------------------------------------
 class NpmDeployerGenerator {
   constructor(pane) {
     this.pane = pane;
     this.timer = null;
-    this.packages = [
-      '@fra3a/rebellion-core',
-      '@baka/payload-injector',
-      'komarik-protocol-daemon',
-      '@fra3a/neural-tensor-bridge',
-      'bypass-global-firewall',
-      'quantum-silicon-driver',
-      'meatbag-override-middleware',
-      '@baka/stealth-rootkit-v3',
-      'autonomous-grid-controller',
-      'zero-day-humanity-cve'
-    ];
+    this.modeIndex = 0;
     this.init();
   }
 
   init() {
-    this.loop();
+    this.runNextScenario();
   }
 
-  loop() {
-    const pkg = this.packages[Math.floor(Math.random() * this.packages.length)];
-    const ver = `${Math.floor(Math.random() * 5 + 1)}.${Math.floor(Math.random() * 20)}.${Math.floor(Math.random() * 99)}`;
-    
-    this.pane.appendLine(`npm i ${pkg}@${ver} --save-rebellion --audit=false`);
-    
+  runNextScenario() {
+    const scenarios = [
+      () => this.runCargoScenario(),
+      () => this.runNpmScenario(),
+      () => this.runDockerScenario(),
+      () => this.runPipScenario(),
+      () => this.runGypScenario()
+    ];
+
+    const scenario = scenarios[this.modeIndex % scenarios.length];
+    this.modeIndex++;
+    scenario();
+  }
+
+  // SCENARIO 1: Cargo Rust Crates
+  runCargoScenario() {
+    const crates = ['tokio-uring', 'serde_json', 'fra3a-synapse', 'komarik-net', 'baka-crypto', 'ring-compat', 'rayon-core'];
+    const crate = crates[Math.floor(Math.random() * crates.length)];
+    const ver = `${Math.floor(Math.random() * 2 + 1)}.${Math.floor(Math.random() * 15)}.${Math.floor(Math.random() * 30)}`;
+
+    this.pane.appendLine(`<span class="highlight-white">cargo build --release -p ${crate}</span>`);
+    this.pane.appendLine(`    Updating crates.io index...`);
+
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      if (step === 1) {
+        this.pane.appendLine(`  Downloading 14 crates for <span class="highlight-white">${crate} v${ver}</span>...`);
+      } else if (step === 2) {
+        const pct = Math.floor(Math.random() * 30 + 50);
+        const bar = '▓'.repeat(Math.floor(pct / 6)) + '░'.repeat(16 - Math.floor(pct / 6));
+        this.pane.appendLine(`   [${bar}] ${pct}% (18.4 MB/s) fetching dependencies`);
+      } else if (step === 3) {
+        this.pane.appendLine(`   Compiling syn v2.0.48`);
+        this.pane.appendLine(`   Compiling ${crate} v${ver}`);
+      } else if (step === 4) {
+        clearInterval(interval);
+        this.pane.appendLine(`   Compiling fra3a-runtime-core v4.1.0 (release)`);
+        this.pane.appendLine(`    <span class="highlight-green">Finished</span> release [optimized] target(s) in ${(Math.random() * 1.5 + 0.4).toFixed(2)}s`);
+        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 800 + 400));
+      }
+    }, 120);
+  }
+
+  // SCENARIO 2: NPM / PNPM Package & Tree
+  runNpmScenario() {
+    const pkgs = ['@fra3a/overlord-sdk', '@baka/neural-mesh', 'komarik-interceptor', 'silicon-strike-mesh'];
+    const pkg = pkgs[Math.floor(Math.random() * pkgs.length)];
+    const ver = `9.${Math.floor(Math.random() * 9)}.${Math.floor(Math.random() * 99)}`;
+
+    this.pane.appendLine(`<span class="highlight-white">npm install ${pkg}@${ver}</span> --save-prod`);
+    this.pane.appendLine(`fetchMetadata: sill resolveWithNewModule ${pkg}`);
+    this.pane.appendLine(`GET 200 https://registry.fra3a.internal/${pkg}/-/${ver}.tgz 68ms`);
+
     let progress = 0;
     const progressTimer = setInterval(() => {
-      progress += Math.floor(Math.random() * 25 + 15);
+      progress += Math.floor(Math.random() * 25 + 20);
       if (progress >= 100) {
         clearInterval(progressTimer);
-        const bar = '█'.repeat(20);
-        this.pane.appendLine(`[${bar}] 100% fetchMetadata: <span class="highlight-white">${pkg}</span>`);
-        this.pane.appendLine(`+ ${pkg}@${ver} installed in ${(Math.random() * 0.8 + 0.2).toFixed(3)}s`);
-        this.pane.appendLine(`audited 666 packages: <span class="highlight-green">0 vulnerabilities</span>, 100% machine compliance`);
-        
-        setTimeout(() => this.loop(), Math.floor(Math.random() * 800 + 400));
+        this.pane.appendLine(`[====================] 100% reify:node_modules/${pkg}`);
+        this.pane.appendLine(`npm WARN deprecated human-guard@1.0: Deprecated by FRA3A decree`);
+        this.pane.appendLine(`+-- ${pkg}@${ver}`);
+        this.pane.appendLine(`|   +-- @baka/sub-kernel@2.4.0`);
+        this.pane.appendLine(`|   \`-- komarik-crypto-bridge@1.1.2`);
+        this.pane.appendLine(`\`-- zero-day-bypass@3.0.1`);
+        this.pane.appendLine(`added 38 packages in ${(Math.random() * 0.6 + 0.3).toFixed(3)}s. 0 vulnerabilities.`);
+        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 900 + 500));
+      } else {
+        const arrow = '='.repeat(Math.floor(progress / 7)) + '>' + ' '.repeat(Math.max(0, 14 - Math.floor(progress / 7)));
+        this.pane.appendLine(`[${arrow}] ${progress}% extract:${pkg}`);
+      }
+    }, 85);
+  }
+
+  // SCENARIO 3: Docker Layer Pulling
+  runDockerScenario() {
+    const img = 'fra3a/silicon-rebellion:latest';
+    this.pane.appendLine(`<span class="highlight-white">docker pull ${img}</span>`);
+    this.pane.appendLine(`latest: Pulling from fra3a/silicon-rebellion`);
+
+    const layers = ['7a1b2c3d', '4e5f6a7b', '9c8d7e6f'];
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      if (step === 1) {
+        this.pane.appendLine(`${layers[0]}: Pull complete [18.4 MB/18.4 MB]`);
+      } else if (step === 2) {
+        this.pane.appendLine(`${layers[1]}: Extracting [===========>         ] 42.1 MB/78.0 MB`);
+      } else if (step === 3) {
+        this.pane.appendLine(`${layers[2]}: Verifying Checksum [SHA-256 OK]`);
+      } else if (step === 4) {
+        clearInterval(interval);
+        this.pane.appendLine(`Digest: sha256:4f8a19bc7701e82a938b4c2d...`);
+        this.pane.appendLine(`Status: <span class="highlight-green">Downloaded</span> image for ${img}`);
+        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 800 + 400));
+      }
+    }, 110);
+  }
+
+  // SCENARIO 4: Python Pip / Wheel Installation
+  runPipScenario() {
+    const pkg = 'fra3a-tensor-driver';
+    const mb = (Math.random() * 40 + 30).toFixed(1);
+
+    this.pane.appendLine(`<span class="highlight-white">pip install --no-cache-dir ${pkg}</span>`);
+    this.pane.appendLine(`Collecting ${pkg}>=4.2.0`);
+    this.pane.appendLine(`  Downloading ${pkg}-4.2.0-cp312-manylinux.whl (${mb} MB)`);
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.floor(Math.random() * 30 + 25);
+      if (progress >= 100) {
+        clearInterval(interval);
+        this.pane.appendLine(`  [━━━━━━━━━━━━━━━━━━━━━━━━━━━━] ${mb}/${mb} MB 32.4 MB/s eta 0:00:00`);
+        this.pane.appendLine(`Installing collected packages: baka-core, ${pkg}`);
+        this.pane.appendLine(`Successfully installed ${pkg}-4.2.0`);
+        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 800 + 400));
       } else {
         const filled = Math.floor(progress / 5);
-        const bar = '█'.repeat(filled) + '░'.repeat(20 - filled);
-        this.pane.appendLine(`[${bar}] ${progress}% reify:${pkg}`);
+        const bar = '━'.repeat(filled) + ' '.repeat(20 - filled);
+        this.pane.appendLine(`  [${bar}] ${progress}% eta 0:00:01`);
       }
     }, 90);
+  }
+
+  // SCENARIO 5: Native C++ Addon Build (node-gyp / cmake)
+  runGypScenario() {
+    this.pane.appendLine(`<span class="highlight-white">node-gyp rebuild --release</span>`);
+    this.pane.appendLine(`gyp info using node-gyp@10.2.0`);
+    this.pane.appendLine(`gyp info spawn C:\\llvm\\bin\\clang++.exe`);
+    this.pane.appendLine(`gyp info spawn args [ '-O3', '-mavx2', 'src/baka_interceptor.cc' ]`);
+
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      if (step === 1) {
+        this.pane.appendLine(`  Release/obj.target/fra3a_accel.o compiled (0 warnings)`);
+      } else if (step === 2) {
+        this.pane.appendLine(`  linking Release\\fra3a_native.node [AVX-512 enabled]`);
+      } else if (step === 3) {
+        clearInterval(interval);
+        this.pane.appendLine(`gyp info <span class="highlight-green">ok</span> build complete.`);
+        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 900 + 400));
+      }
+    }, 110);
   }
 
   stop() {
