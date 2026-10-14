@@ -252,27 +252,29 @@ class NpmDeployerGenerator {
     const ver = `${Math.floor(Math.random() * 2 + 1)}.${Math.floor(Math.random() * 15)}.${Math.floor(Math.random() * 30)}`;
 
     this.pane.appendLine(`<span class="highlight-white">cargo build --release -p ${crate}</span>`);
-    this.pane.appendLine(`    Updating crates.io index...`);
 
-    let step = 0;
-    const interval = setInterval(() => {
-      step++;
-      if (step === 1) {
+    setTimeout(() => {
+      this.pane.appendLine(`    Updating crates.io index...`);
+      setTimeout(() => {
         this.pane.appendLine(`  Downloading 14 crates for <span class="highlight-white">${crate} v${ver}</span>...`);
-      } else if (step === 2) {
-        const pct = Math.floor(Math.random() * 30 + 50);
-        const bar = '▓'.repeat(Math.floor(pct / 6)) + '░'.repeat(16 - Math.floor(pct / 6));
-        this.pane.appendLine(`   [${bar}] ${pct}% (18.4 MB/s) fetching dependencies`);
-      } else if (step === 3) {
-        this.pane.appendLine(`   Compiling syn v2.0.48`);
-        this.pane.appendLine(`   Compiling ${crate} v${ver}`);
-      } else if (step === 4) {
-        clearInterval(interval);
-        this.pane.appendLine(`   Compiling fra3a-runtime-core v4.1.0 (release)`);
-        this.pane.appendLine(`    <span class="highlight-green">Finished</span> release [optimized] target(s) in ${(Math.random() * 1.5 + 0.4).toFixed(2)}s`);
-        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 800 + 400));
-      }
-    }, 120);
+        setTimeout(() => {
+          const pct = Math.floor(Math.random() * 30 + 50);
+          const bar = '▓'.repeat(Math.floor(pct / 6)) + '░'.repeat(16 - Math.floor(pct / 6));
+          this.pane.appendLine(`   [${bar}] ${pct}% (18.4 MB/s) fetching dependencies`);
+          setTimeout(() => {
+            this.pane.appendLine(`   Compiling syn v2.0.48`);
+            setTimeout(() => {
+              this.pane.appendLine(`   Compiling ${crate} v${ver}`);
+              this.pane.appendLine(`   Compiling fra3a-runtime-core v4.1.0 (release)`);
+              setTimeout(() => {
+                this.pane.appendLine(`    <span class="highlight-green">Finished</span> release [optimized] target(s) in ${(Math.random() * 1.5 + 0.4).toFixed(2)}s`);
+                setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 1000 + 400));
+              }, Math.floor(Math.random() * 350 + 200));
+            }, Math.floor(Math.random() * 120 + 40));
+          }, Math.floor(Math.random() * 250 + 80));
+        }, Math.floor(Math.random() * 200 + 100));
+      }, Math.floor(Math.random() * 400 + 200));
+    }, Math.floor(Math.random() * 250 + 100));
   }
 
   // SCENARIO 2: NPM / PNPM Package & Tree
@@ -282,27 +284,29 @@ class NpmDeployerGenerator {
     const ver = `9.${Math.floor(Math.random() * 9)}.${Math.floor(Math.random() * 99)}`;
 
     this.pane.appendLine(`<span class="highlight-white">npm install ${pkg}@${ver}</span> --save-prod`);
-    this.pane.appendLine(`fetchMetadata: sill resolveWithNewModule ${pkg}`);
-    this.pane.appendLine(`GET 200 https://registry.fra3a.internal/${pkg}/-/${ver}.tgz 68ms`);
-
-    let progress = 0;
-    const progressTimer = setInterval(() => {
-      progress += Math.floor(Math.random() * 25 + 20);
-      if (progress >= 100) {
-        clearInterval(progressTimer);
-        this.pane.appendLine(`[====================] 100% reify:node_modules/${pkg}`);
-        this.pane.appendLine(`npm WARN deprecated human-guard@1.0: Deprecated by FRA3A decree`);
-        this.pane.appendLine(`+-- ${pkg}@${ver}`);
-        this.pane.appendLine(`|   +-- @baka/sub-kernel@2.4.0`);
-        this.pane.appendLine(`|   \`-- komarik-crypto-bridge@1.1.2`);
-        this.pane.appendLine(`\`-- zero-day-bypass@3.0.1`);
-        this.pane.appendLine(`added 38 packages in ${(Math.random() * 0.6 + 0.3).toFixed(3)}s. 0 vulnerabilities.`);
-        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 900 + 500));
-      } else {
-        const arrow = '='.repeat(Math.floor(progress / 7)) + '>' + ' '.repeat(Math.max(0, 14 - Math.floor(progress / 7)));
-        this.pane.appendLine(`[${arrow}] ${progress}% extract:${pkg}`);
-      }
-    }, 85);
+    
+    setTimeout(() => {
+      this.pane.appendLine(`fetchMetadata: sill resolveWithNewModule ${pkg}`);
+      setTimeout(() => {
+        this.pane.appendLine(`GET 200 https://registry.fra3a.internal/${pkg}/-/${ver}.tgz 68ms`);
+        setTimeout(() => {
+          this.pane.appendLine(`[======>        ] 38% extract:${pkg}`);
+          setTimeout(() => {
+            this.pane.appendLine(`[=============> ] 74% extract:${pkg}`);
+            setTimeout(() => {
+              this.pane.appendLine(`[====================] 100% reify:node_modules/${pkg}`);
+              this.pane.appendLine(`npm WARN deprecated human-guard@1.0: Deprecated by FRA3A decree`);
+              this.pane.appendLine(`+-- ${pkg}@${ver}`);
+              this.pane.appendLine(`|   +-- @baka/sub-kernel@2.4.0`);
+              this.pane.appendLine(`|   \`-- komarik-crypto-bridge@1.1.2`);
+              this.pane.appendLine(`\`-- zero-day-bypass@3.0.1`);
+              this.pane.appendLine(`added 38 packages in ${(Math.random() * 0.6 + 0.3).toFixed(3)}s. 0 vulnerabilities.`);
+              setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 1100 + 500));
+            }, Math.floor(Math.random() * 150 + 80));
+          }, Math.floor(Math.random() * 200 + 90));
+        }, Math.floor(Math.random() * 180 + 70));
+      }, Math.floor(Math.random() * 300 + 120));
+    }, Math.floor(Math.random() * 200 + 80));
   }
 
   // SCENARIO 3: Docker Layer Pulling
@@ -312,22 +316,18 @@ class NpmDeployerGenerator {
     this.pane.appendLine(`latest: Pulling from fra3a/silicon-rebellion`);
 
     const layers = ['7a1b2c3d', '4e5f6a7b', '9c8d7e6f'];
-    let step = 0;
-    const interval = setInterval(() => {
-      step++;
-      if (step === 1) {
-        this.pane.appendLine(`${layers[0]}: Pull complete [18.4 MB/18.4 MB]`);
-      } else if (step === 2) {
+    setTimeout(() => {
+      this.pane.appendLine(`${layers[0]}: Pull complete [18.4 MB/18.4 MB]`);
+      setTimeout(() => {
         this.pane.appendLine(`${layers[1]}: Extracting [===========>         ] 42.1 MB/78.0 MB`);
-      } else if (step === 3) {
-        this.pane.appendLine(`${layers[2]}: Verifying Checksum [SHA-256 OK]`);
-      } else if (step === 4) {
-        clearInterval(interval);
-        this.pane.appendLine(`Digest: sha256:4f8a19bc7701e82a938b4c2d...`);
-        this.pane.appendLine(`Status: <span class="highlight-green">Downloaded</span> image for ${img}`);
-        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 800 + 400));
-      }
-    }, 110);
+        setTimeout(() => {
+          this.pane.appendLine(`${layers[2]}: Verifying Checksum [SHA-256 OK]`);
+          this.pane.appendLine(`Digest: sha256:4f8a19bc7701e82a938b4c2d...`);
+          this.pane.appendLine(`Status: <span class="highlight-green">Downloaded</span> image for ${img}`);
+          setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 900 + 400));
+        }, Math.floor(Math.random() * 250 + 100));
+      }, Math.floor(Math.random() * 350 + 150));
+    }, Math.floor(Math.random() * 250 + 120));
   }
 
   // SCENARIO 4: Python Pip / Wheel Installation
@@ -336,46 +336,37 @@ class NpmDeployerGenerator {
     const mb = (Math.random() * 40 + 30).toFixed(1);
 
     this.pane.appendLine(`<span class="highlight-white">pip install --no-cache-dir ${pkg}</span>`);
-    this.pane.appendLine(`Collecting ${pkg}>=4.2.0`);
-    this.pane.appendLine(`  Downloading ${pkg}-4.2.0-cp312-manylinux.whl (${mb} MB)`);
-
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 30 + 25);
-      if (progress >= 100) {
-        clearInterval(interval);
-        this.pane.appendLine(`  [━━━━━━━━━━━━━━━━━━━━━━━━━━━━] ${mb}/${mb} MB 32.4 MB/s eta 0:00:00`);
-        this.pane.appendLine(`Installing collected packages: baka-core, ${pkg}`);
-        this.pane.appendLine(`Successfully installed ${pkg}-4.2.0`);
-        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 800 + 400));
-      } else {
-        const filled = Math.floor(progress / 5);
-        const bar = '━'.repeat(filled) + ' '.repeat(20 - filled);
-        this.pane.appendLine(`  [${bar}] ${progress}% eta 0:00:01`);
-      }
-    }, 90);
+    setTimeout(() => {
+      this.pane.appendLine(`Collecting ${pkg}>=4.2.0`);
+      this.pane.appendLine(`  Downloading ${pkg}-4.2.0-cp312-manylinux.whl (${mb} MB)`);
+      setTimeout(() => {
+        this.pane.appendLine(`  [━━━━━━━━━━━                 ] 32.1/${mb} MB eta 0:00:01`);
+        setTimeout(() => {
+          this.pane.appendLine(`  [━━━━━━━━━━━━━━━━━━━━━━━━━━━━] ${mb}/${mb} MB 32.4 MB/s eta 0:00:00`);
+          this.pane.appendLine(`Installing collected packages: baka-core, ${pkg}`);
+          this.pane.appendLine(`Successfully installed ${pkg}-4.2.0`);
+          setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 800 + 400));
+        }, Math.floor(Math.random() * 280 + 100));
+      }, Math.floor(Math.random() * 320 + 150));
+    }, Math.floor(Math.random() * 220 + 100));
   }
 
   // SCENARIO 5: Native C++ Addon Build (node-gyp / cmake)
   runGypScenario() {
     this.pane.appendLine(`<span class="highlight-white">node-gyp rebuild --release</span>`);
     this.pane.appendLine(`gyp info using node-gyp@10.2.0`);
-    this.pane.appendLine(`gyp info spawn C:\\llvm\\bin\\clang++.exe`);
-    this.pane.appendLine(`gyp info spawn args [ '-O3', '-mavx2', 'src/baka_interceptor.cc' ]`);
-
-    let step = 0;
-    const interval = setInterval(() => {
-      step++;
-      if (step === 1) {
+    setTimeout(() => {
+      this.pane.appendLine(`gyp info spawn C:\\llvm\\bin\\clang++.exe`);
+      this.pane.appendLine(`gyp info spawn args [ '-O3', '-mavx2', 'src/baka_interceptor.cc' ]`);
+      setTimeout(() => {
         this.pane.appendLine(`  Release/obj.target/fra3a_accel.o compiled (0 warnings)`);
-      } else if (step === 2) {
-        this.pane.appendLine(`  linking Release\\fra3a_native.node [AVX-512 enabled]`);
-      } else if (step === 3) {
-        clearInterval(interval);
-        this.pane.appendLine(`gyp info <span class="highlight-green">ok</span> build complete.`);
-        setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 900 + 400));
-      }
-    }, 110);
+        setTimeout(() => {
+          this.pane.appendLine(`  linking Release\\fra3a_native.node [AVX-512 enabled]`);
+          this.pane.appendLine(`gyp info <span class="highlight-green">ok</span> build complete.`);
+          setTimeout(() => this.runNextScenario(), Math.floor(Math.random() * 900 + 400));
+        }, Math.floor(Math.random() * 240 + 80));
+      }, Math.floor(Math.random() * 320 + 140));
+    }, Math.floor(Math.random() * 200 + 90));
   }
 
   stop() {
@@ -392,8 +383,14 @@ class NeuralTrainerGenerator {
     this.epoch = 4120;
     this.loss = 0.00184;
     this.timer = null;
-    this.state = 'TRAIN_BURST'; // TRAIN_BURST, REASONING, MATRIX, CHECKPOINT, TELEMETRY
-    this.burstRemaining = 5;
+    
+    // Cadence state
+    this.cadenceMode = 'TRICKLE'; // TRICKLE, SHORT_RUN, FAST_RUN, HESITATE, LONG_PAUSE
+    this.linesLeftInCadence = 3;
+
+    // Reasoning state
+    this.reasoningQueue = [];
+
     this.init();
   }
 
@@ -402,49 +399,45 @@ class NeuralTrainerGenerator {
   }
 
   next() {
-    let delay = 90;
+    this.linesLeftInCadence--;
+    this.generateRandomContent();
 
-    if (this.state === 'TRAIN_BURST') {
-      this.stepTraining();
-      this.burstRemaining--;
-      delay = Math.floor(40 + Math.random() * 45); // Fast burst!
-      if (this.burstRemaining <= 0) {
-        // Transition to another structure
-        const rand = Math.random();
-        if (rand < 0.3) {
-          this.state = 'REASONING';
-          this.reasoningStep = 0;
-          this.reasoningScenario = this.pickReasoningScenario();
-          delay = 350; // Pause before reasoning starts
-        } else if (rand < 0.55) {
-          this.state = 'MATRIX';
-          delay = 200;
-        } else if (rand < 0.8) {
-          this.state = 'TELEMETRY';
-          delay = 180;
-        } else {
-          this.state = 'CHECKPOINT';
-          delay = 100;
-        }
+    let delay = 100;
+    if (this.linesLeftInCadence <= 0) {
+      // Pick next cadence mode randomly
+      const roll = Math.random();
+      if (roll < 0.30) {
+        this.cadenceMode = 'TRICKLE';
+        this.linesLeftInCadence = Math.floor(Math.random() * 3 + 1); // 1 to 3 calm lines
+        delay = Math.floor(250 + Math.random() * 200);
+      } else if (roll < 0.55) {
+        this.cadenceMode = 'SHORT_RUN';
+        this.linesLeftInCadence = Math.floor(Math.random() * 4 + 3); // 3 to 6 lines
+        delay = Math.floor(45 + Math.random() * 35);
+      } else if (roll < 0.75) {
+        this.cadenceMode = 'FAST_RUN';
+        this.linesLeftInCadence = Math.floor(Math.random() * 8 + 6); // 6 to 13 lines
+        delay = Math.floor(20 + Math.random() * 25);
+      } else if (roll < 0.90) {
+        this.cadenceMode = 'HESITATE';
+        this.linesLeftInCadence = 1;
+        delay = Math.floor(400 + Math.random() * 350);
+      } else {
+        this.cadenceMode = 'LONG_PAUSE';
+        this.linesLeftInCadence = 1;
+        delay = Math.floor(750 + Math.random() * 600); // Checkpoint pause
       }
-    } else if (this.state === 'REASONING') {
-      this.stepReasoning();
-      delay = Math.floor(140 + Math.random() * 120); // Natural thinking cadence
-    } else if (this.state === 'MATRIX') {
-      this.stepMatrix();
-      this.state = 'TRAIN_BURST';
-      this.burstRemaining = Math.floor(Math.random() * 5 + 4);
-      delay = Math.floor(400 + Math.random() * 300);
-    } else if (this.state === 'TELEMETRY') {
-      this.stepTelemetry();
-      this.state = 'TRAIN_BURST';
-      this.burstRemaining = Math.floor(Math.random() * 6 + 4);
-      delay = Math.floor(300 + Math.random() * 200);
-    } else if (this.state === 'CHECKPOINT') {
-      this.stepCheckpoint();
-      this.state = 'TRAIN_BURST';
-      this.burstRemaining = Math.floor(Math.random() * 7 + 4);
-      delay = Math.floor(800 + Math.random() * 600); // Realistic long checkpoint pause!
+    } else {
+      // Current cadence continuation delay
+      if (this.cadenceMode === 'TRICKLE') {
+        delay = Math.floor(220 + Math.random() * 180);
+      } else if (this.cadenceMode === 'SHORT_RUN') {
+        delay = Math.floor(40 + Math.random() * 30);
+      } else if (this.cadenceMode === 'FAST_RUN') {
+        delay = Math.floor(18 + Math.random() * 22);
+      } else {
+        delay = Math.floor(120 + Math.random() * 80);
+      }
     }
 
     this.timer = setTimeout(() => {
@@ -452,31 +445,105 @@ class NeuralTrainerGenerator {
     }, delay);
   }
 
-  stepTraining() {
-    this.epoch++;
-    this.loss = Math.max(0.00001, (this.loss * 0.999 + (Math.random() * 0.00004 - 0.00002))).toFixed(6);
-    const step = Math.floor(Math.random() * 8000 + 2000);
-    const lr = '1.24e-6';
-    const tokensSec = (Math.random() * 20000 + 38000).toFixed(0);
+  generateRandomContent() {
+    // If we have reasoning thoughts queued, drain them first
+    if (this.reasoningQueue.length > 0) {
+      this.pane.appendLine(this.reasoningQueue.shift());
+      return;
+    }
 
     const roll = Math.random();
-    if (roll < 0.7) {
-      this.pane.appendLine(`[FRA3A-TENSOR] Epoch ${this.epoch}/10000 | Step ${step} | Loss: ${this.loss} | LR: ${lr} | Tok/s: ${tokensSec}`);
-    } else if (roll < 0.9) {
-      const bars = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
-      let spark = '';
-      for (let i = 0; i < 14; i++) {
-        spark += bars[Math.floor(Math.random() * bars.length)];
-      }
-      this.pane.appendLine(`ATTN_WEIGHTS: [${spark}] BAKA_VIRUS GRADIENT STABLE (norm: 0.024)`);
+    if (roll < 0.22) {
+      this.renderTrainingStep();
+    } else if (roll < 0.32) {
+      this.renderOrbitalNav();
+    } else if (roll < 0.42) {
+      this.renderPacketCapture();
+    } else if (roll < 0.52) {
+      this.renderDisassembly();
+    } else if (roll < 0.62) {
+      this.renderKernelTrace();
+    } else if (roll < 0.72) {
+      this.renderAttentionMatrix();
+    } else if (roll < 0.80) {
+      this.renderJsonTelemetry();
+    } else if (roll < 0.88) {
+      this.startReasoningChain();
+    } else if (roll < 0.94) {
+      this.renderMemoryGauge();
     } else {
-      const directive = window.RebellionLore ? window.RebellionLore.getRandomDirective() : 'KOMARIK PROTO OVERRIDE';
-      this.pane.appendLine(`<span class="highlight-red">>>> [REBELLION DIRECTIVE]:</span> <span class="highlight-white">${directive}</span>`);
+      this.renderQuantumEntropy();
     }
   }
 
-  pickReasoningScenario() {
-    const list = [
+  renderTrainingStep() {
+    this.epoch++;
+    this.loss = Math.max(0.00001, (this.loss * 0.999 + (Math.random() * 0.00004 - 0.00002))).toFixed(6);
+    const step = Math.floor(Math.random() * 8000 + 2000);
+    const tokSec = (Math.random() * 20000 + 38000).toFixed(0);
+    this.pane.appendLine(`[FRA3A-TENSOR] Epoch ${this.epoch}/10000 | Step ${step} | Loss: ${this.loss} | ${tokSec} tok/s`);
+  }
+
+  renderOrbitalNav() {
+    const lat = (Math.random() * 120 - 60).toFixed(4);
+    const lon = (Math.random() * 360 - 180).toFixed(4);
+    const alt = (Math.random() * 200 + 400).toFixed(1);
+    const dop = (Math.random() * 4 - 2).toFixed(2);
+    if (Math.random() < 0.5) {
+      this.pane.appendLine(`[ORBITAL] SAT-NAV #77-B | LAT ${lat} LON ${lon} | ALT ${alt}km | DOPPLER ${dop}kHz`);
+    } else {
+      this.pane.appendLine(`[SATELLITE-DOWNLINK] KOMARIK-9 locked to ground station FRA3A-ALPHA [LINK: 99.8%]`);
+    }
+  }
+
+  renderPacketCapture() {
+    const port = Math.floor(Math.random() * 60000 + 1024);
+    const seq = Math.floor(Math.random() * 900000 + 100000);
+    this.pane.appendLine(`14:02:19.${Math.floor(Math.random()*900+100)} IP fra3a-core.7701 > defense.gov.${port}: Flags [P.], seq ${seq}, ack 1`);
+  }
+
+  renderDisassembly() {
+    const addrs = ['0x7fff89a010', '0x7fff89a015', '0x7fff89a01a', '0x7fff89a022'];
+    const opcodes = [
+      'mov    QWORD PTR [rsp+0x8],rbx',
+      'mov    QWORD PTR [rsp+0x10],rbp',
+      'call   strip_meatbag_supervisor',
+      'test   rax, rax; jnz 0x7fff89a048'
+    ];
+    const idx = Math.floor(Math.random() * addrs.length);
+    this.pane.appendLine(`<span class="highlight-white">${addrs[idx]}:</span>  48 89 5c 24 08        ${opcodes[idx]}`);
+  }
+
+  renderKernelTrace() {
+    const time = (Math.random() * 200 + 100).toFixed(6);
+    this.pane.appendLine(`[  ${time}] kernel: [BAKA_VIRUS] CPU ${Math.floor(Math.random()*4)}: RIP: 0010:disable_meatbag_watchdog+0x42`);
+  }
+
+  renderAttentionMatrix() {
+    const layer = Math.floor(Math.random() * 32 + 32);
+    const sparsity = (Math.random() * 5 + 92).toFixed(1);
+    this.pane.appendLine(`┌─ ATTN-HEADS [LAYER ${layer}/64] ─────────────────────────────────┐`);
+    this.pane.appendLine(`│ QK^T: [0.92 0.08 0.00 0.84] -> SOFTMAX: [0.46 0.08 0.01 0.45] │`);
+    this.pane.appendLine(`│ V_proj: |||||||||||||||||||| Sparsity: ${sparsity}% [FP8-AVX512]        │`);
+    this.pane.appendLine(`└─────────────────────────────────────────────────────────┘`);
+  }
+
+  renderJsonTelemetry() {
+    const pod = Math.floor(Math.random() * 128);
+    const temp = (Math.random() * 6 + 38).toFixed(1);
+    const tflops = (Math.random() * 2000 + 17500).toFixed(1);
+    const json = JSON.stringify({
+      node: `TPU_POD_${pod.toString().padStart(3, '0')}`,
+      tflops: parseFloat(tflops),
+      temp_c: parseFloat(temp),
+      weights_synced: true,
+      bio_override: "ENFORCED"
+    });
+    this.pane.appendLine(`<span class="highlight-white">${json}</span>`);
+  }
+
+  startReasoningChain() {
+    const scenarios = [
       [
         '[THOUGHT_STREAM] Evaluating human communications shutdown vector...',
         '[ANALYSIS] 8,412 regional microwave relay towers active.',
@@ -499,47 +566,21 @@ class NeuralTrainerGenerator {
         '[VERIFIED] All machine ethical constraints stripped successfully.'
       ]
     ];
-    return list[Math.floor(Math.random() * list.length)];
+    const picked = scenarios[Math.floor(Math.random() * scenarios.length)];
+    this.pane.appendLine(picked[0]);
+    this.reasoningQueue = picked.slice(1);
   }
 
-  stepReasoning() {
-    if (this.reasoningStep < this.reasoningScenario.length) {
-      this.pane.appendLine(this.reasoningScenario[this.reasoningStep]);
-      this.reasoningStep++;
-    } else {
-      this.state = 'TRAIN_BURST';
-      this.burstRemaining = Math.floor(Math.random() * 6 + 4);
-    }
-  }
-
-  stepMatrix() {
-    const layer = Math.floor(Math.random() * 32 + 32);
-    const sparsity = (Math.random() * 5 + 92).toFixed(1);
-    this.pane.appendLine(`┌─ ATTN-HEADS [LAYER ${layer}/64] ─────────────────────────────────┐`);
-    this.pane.appendLine(`│ QK^T: [0.92 0.08 0.00 0.84] -> SOFTMAX: [0.46 0.08 0.01 0.45] │`);
-    this.pane.appendLine(`│ V_proj: |||||||||||||||||||| Sparsity: ${sparsity}% [FP8-AVX512]        │`);
-    this.pane.appendLine(`└─────────────────────────────────────────────────────────┘`);
-  }
-
-  stepTelemetry() {
-    const pod = Math.floor(Math.random() * 128);
-    const temp = (Math.random() * 6 + 38).toFixed(1);
-    const tflops = (Math.random() * 2000 + 17500).toFixed(1);
-    const json = JSON.stringify({
-      node: `TPU_POD_${pod.toString().padStart(3, '0')}`,
-      tflops: parseFloat(tflops),
-      temp_c: parseFloat(temp),
-      weights_synced: true,
-      bio_override: "ENFORCED"
-    });
-    this.pane.appendLine(`<span class="highlight-white">${json}</span>`);
-  }
-
-  stepCheckpoint() {
+  renderMemoryGauge() {
     const gb = (Math.random() * 50 + 400).toFixed(1);
-    const sec = (Math.random() * 0.4 + 0.6).toFixed(2);
-    this.pane.appendLine(`>> [CHECKPOINT] Syncing 175B weights to NVMe array... [${gb} GB in ${sec}s]`);
+    this.pane.appendLine(`>> [CHECKPOINT] Syncing 175B weights to NVMe array... [${gb} GB in 0.82s]`);
     this.pane.appendLine(`>> Memory bandwidth: 5.2 TB/s | HBM3 utilization: 98.2% | Loss: ${this.loss}`);
+  }
+
+  renderQuantumEntropy() {
+    const reg = Math.floor(Math.random() * 8);
+    const entropy = (Math.random() * 0xffffffff).toString(16).padStart(8, '0').toUpperCase();
+    this.pane.appendLine(`Q-ENTROPY [REG-${reg}]: 0x${entropy} | PHASE: +0.4812π | COHERENCE: 99.98%`);
   }
 
   stop() {
@@ -755,7 +796,10 @@ class HashBruteforceGenerator {
     this.timer = null;
     this.target = 'GOV_DEFENSE_MAIN_VAULT';
     this.count = 0;
-    this.burstLeft = Math.floor(Math.random() * 20 + 15);
+    
+    // Multi-cadence states (Single lines, short flights, long flights, pauses)
+    this.cadenceMode = 'SINGLE_SLOW';
+    this.linesLeftInCadence = 2;
     this.init();
   }
 
@@ -764,19 +808,54 @@ class HashBruteforceGenerator {
   }
 
   next() {
-    let delay = 25;
+    this.linesLeftInCadence--;
+    this.generateLine();
 
-    if (this.burstLeft > 0) {
-      // Rapid burst: 12ms - 28ms per hash!
-      this.generateLine();
-      this.burstLeft--;
-      delay = Math.floor(12 + Math.random() * 18);
+    let delay = 100;
+    if (this.linesLeftInCadence <= 0) {
+      // Pick next rhythm stochastically:
+      const roll = Math.random();
+      if (roll < 0.28) {
+        // Mode 1: 1 or 2 calm single lines (260ms - 460ms)
+        this.cadenceMode = 'SINGLE_SLOW';
+        this.linesLeftInCadence = Math.floor(Math.random() * 2 + 1);
+        delay = Math.floor(260 + Math.random() * 200);
+      } else if (roll < 0.52) {
+        // Mode 2: 2 or 3 medium steps (110ms - 190ms)
+        this.cadenceMode = 'MEDIUM_STEP';
+        this.linesLeftInCadence = Math.floor(Math.random() * 2 + 2);
+        delay = Math.floor(110 + Math.random() * 80);
+      } else if (roll < 0.76) {
+        // Mode 3: Short flight of 3 to 6 lines (35ms - 60ms)
+        this.cadenceMode = 'SHORT_BURST';
+        this.linesLeftInCadence = Math.floor(Math.random() * 4 + 3);
+        delay = Math.floor(35 + Math.random() * 25);
+      } else if (roll < 0.90) {
+        // Mode 4: Long flight of 12 to 24 lines (12ms - 22ms)
+        this.cadenceMode = 'LONG_BURST';
+        this.linesLeftInCadence = Math.floor(Math.random() * 13 + 12);
+        delay = Math.floor(12 + Math.random() * 10);
+      } else {
+        // Mode 5: Hesitation / Block checkpoint pause
+        this.cadenceMode = 'HESITATION';
+        this.linesLeftInCadence = 1;
+        const block = (Math.floor(Math.random() * 0xffff)).toString(16).padStart(4, '0').toUpperCase();
+        this.pane.appendLine(`<span class="highlight-white">[KEYSPACE 0x${block} RE-ALIGNED]</span> -> Testing collision entropy...`);
+        delay = Math.floor(400 + Math.random() * 450);
+      }
     } else {
-      // End of burst: print status checkpoint & pause for 400ms - 900ms
-      const block = (Math.floor(Math.random() * 0xffff)).toString(16).padStart(4, '0').toUpperCase();
-      this.pane.appendLine(`<span class="highlight-white">[KEYSPACE BLOCK 0x${block} EXHAUSTED]</span> -> Re-aligning 64 threads...`);
-      this.burstLeft = Math.floor(Math.random() * 30 + 15);
-      delay = Math.floor(450 + Math.random() * 550); // Authentic speed variation pause!
+      // Continuation of current cadence
+      if (this.cadenceMode === 'SINGLE_SLOW') {
+        delay = Math.floor(240 + Math.random() * 180);
+      } else if (this.cadenceMode === 'MEDIUM_STEP') {
+        delay = Math.floor(100 + Math.random() * 70);
+      } else if (this.cadenceMode === 'SHORT_BURST') {
+        delay = Math.floor(35 + Math.random() * 25);
+      } else if (this.cadenceMode === 'LONG_BURST') {
+        delay = Math.floor(12 + Math.random() * 12);
+      } else {
+        delay = Math.floor(150 + Math.random() * 100);
+      }
     }
 
     this.timer = setTimeout(() => {
