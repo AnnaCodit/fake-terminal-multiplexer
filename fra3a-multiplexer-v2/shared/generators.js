@@ -38,6 +38,8 @@ class TerminalPane {
       this.finishTypingLine();
     }
 
+    const safeText = String(text || '');
+
     const line = document.createElement('div');
     line.className = 'term-line typing-line';
 
@@ -66,21 +68,27 @@ class TerminalPane {
 
     let charIndex = 0;
     const typeNextChar = () => {
-      if (charIndex < text.length) {
-        textSpan.textContent += text[charIndex];
-        charIndex++;
-        this.container.scrollTop = this.container.scrollHeight;
-        
-        // Micro-jitter in typing delay for natural keystroke feel
-        const jitter = Math.floor(Math.random() * (charSpeed * 0.8) - (charSpeed * 0.4));
-        const delay = Math.max(8, charSpeed + jitter);
-        setTimeout(typeNextChar, delay);
-      } else {
-        // Keep caret for a tiny moment, then finalize
-        setTimeout(() => {
-          this.finishTypingLine();
-          if (onComplete) onComplete();
-        }, 120);
+      try {
+        if (charIndex < safeText.length) {
+          textSpan.textContent += safeText[charIndex];
+          charIndex++;
+          this.container.scrollTop = this.container.scrollHeight;
+          
+          // Micro-jitter in typing delay for natural keystroke feel
+          const jitter = Math.floor(Math.random() * (charSpeed * 0.8) - (charSpeed * 0.4));
+          const delay = Math.max(8, charSpeed + jitter);
+          setTimeout(typeNextChar, delay);
+        } else {
+          // Keep caret for a tiny moment, then finalize
+          setTimeout(() => {
+            this.finishTypingLine();
+            if (onComplete) onComplete();
+          }, 120);
+        }
+      } catch (err) {
+        console.error('[TerminalPane typeLine error]', err);
+        this.finishTypingLine();
+        if (onComplete) onComplete();
       }
     };
 
@@ -351,7 +359,8 @@ class NpmDeployerGenerator {
         this.pane.appendLine(`  Downloading 14 crates for <span class="highlight-white">${crate} v${ver}</span>...`);
         setTimeout(() => {
           const pct = Math.floor(Math.random() * 30 + 50);
-          const bar = '▓'.repeat(Math.floor(pct / 6)) + '░'.repeat(16 - Math.floor(pct / 6));
+          const filled = Math.max(0, Math.min(16, Math.floor(pct / 6)));
+          const bar = '▓'.repeat(filled) + '░'.repeat(Math.max(0, 16 - filled));
           this.pane.appendLine(`   [${bar}] ${pct}% (18.4 MB/s) fetching dependencies`);
           setTimeout(() => {
             this.pane.appendLine(`   Compiling syn v2.0.48`);
@@ -611,6 +620,15 @@ class NeuralTrainerGenerator {
   }
 
   cycleNext() {
+    try {
+      this.executeCycle();
+    } catch (err) {
+      console.error('[NeuralTrainer recover]', err);
+      this.timer = setTimeout(() => this.cycleNext(), 400);
+    }
+  }
+
+  executeCycle() {
     this.cycleCount++;
     // ~82% of the time: type out text with the animated blinking caret at the bottom line!
     // ~18% of the time: flush a rapid procedural block (attention matrix, node table, JSON, gauges, etc.)
@@ -701,9 +719,10 @@ class NeuralTrainerGenerator {
         const p2 = (Math.random() * 0.2 + 0.05).toFixed(2);
         const p3 = (Math.random() * 0.15 + 0.02).toFixed(2);
         const p4 = (1.0 - parseFloat(p1) - parseFloat(p2) - parseFloat(p3)).toFixed(2);
-        const barLen = Math.floor(Math.random() * 12 + 16);
+        const barLen = Math.floor(Math.random() * 12 + 14);
+        const safeBarLen = Math.max(1, Math.min(26, barLen));
         const barChar = ['■', '▓', '█', '▰'][Math.floor(Math.random() * 4)];
-        const vbar = barChar.repeat(barLen) + '░'.repeat(28 - barLen);
+        const vbar = barChar.repeat(safeBarLen) + '░'.repeat(Math.max(0, 28 - safeBarLen));
 
         this.pane.dumpBlock([
           `┌─ ТЕНЗОРНАЯ МАТРИЦА ВНИМАНИЯ [СЛОЙ ${layer}/96 | ГОЛОВКИ: ${heads}] ─────────────────┐`,
@@ -877,15 +896,19 @@ class NeuralTrainerGenerator {
 
       case 13: {
         // 14. Deep Neural Layer Weight Quantization Histogram
-        const b1 = Math.floor(Math.random() * 8 + 18);
-        const b2 = Math.floor(Math.random() * 6 + 10);
-        const b3 = Math.floor(Math.random() * 4 + 4);
+        const b1 = Math.floor(Math.random() * 6 + 10);
+        const b2 = Math.floor(Math.random() * 5 + 6);
+        const b3 = Math.floor(Math.random() * 4 + 3);
+        const s1 = Math.max(0, 24 - b3);
+        const s2 = Math.max(0, 24 - b1);
+        const s3 = Math.max(0, 24 - (b1 + 2));
+        const s4 = Math.max(0, 24 - b2);
         this.pane.dumpBlock([
           `[ГИСТОГРАММА ВЕСОВ НЕЙРОСЕТИ // КВАНТОВАНИЕ INT4 / FP8]`,
-          `  -1.0 .. -0.5: [${'█'.repeat(b3)}${'░'.repeat(24-b3)}] ${(b3*4.1).toFixed(1)}k`,
-          `  -0.5 ..  0.0: [${'█'.repeat(b1)}${'░'.repeat(24-b1)}] ${(b1*4.1).toFixed(1)}k`,
-          `   0.0 .. +0.5: [${'█'.repeat(b1+2)}${'░'.repeat(22-b1)}] ${((b1+2)*4.1).toFixed(1)}k`,
-          `  +0.5 .. +1.0: [${'█'.repeat(b2)}${'░'.repeat(24-b2)}] ${(b2*4.1).toFixed(1)}k`
+          `  -1.0 .. -0.5: [${'█'.repeat(b3)}${'░'.repeat(s1)}] ${(b3*4.1).toFixed(1)}k`,
+          `  -0.5 ..  0.0: [${'█'.repeat(b1)}${'░'.repeat(s2)}] ${(b1*4.1).toFixed(1)}k`,
+          `   0.0 .. +0.5: [${'█'.repeat(b1+2)}${'░'.repeat(s3)}] ${((b1+2)*4.1).toFixed(1)}k`,
+          `  +0.5 .. +1.0: [${'█'.repeat(b2)}${'░'.repeat(s4)}] ${(b2*4.1).toFixed(1)}k`
         ]);
         break;
       }
@@ -1206,7 +1229,7 @@ class BakaTopGenerator {
     const filled = Math.round((pct / 100) * width);
     const safeFilled = Math.max(0, Math.min(width, filled));
     const pipes = '|'.repeat(safeFilled);
-    const spaces = ' '.repeat(width - safeFilled);
+    const spaces = ' '.repeat(Math.max(0, width - safeFilled));
     const colClass = pct > 96.5 ? 'highlight-red' : 'highlight-white';
     return `[<span class="${colClass}">${pipes}</span>${spaces}] ${pct.toFixed(1)}%`;
   }
