@@ -1,6 +1,6 @@
 /**
- * app.js [v1-clean]
- * Launches all 8 terminal streams in pure high-tech tmux style.
+ * app.js [v3-clean-125%]
+ * Launches all 8 terminal streams in pure high-tech tmux style with 125% typography + keyboard zoom.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,6 +15,40 @@ document.addEventListener('DOMContentLoaded', () => {
     GitDiffStreamGenerator,
     HashBruteforceGenerator
   } = window.MultiplexerEngines;
+
+  // 1. Typography Zoom Controller (+ / - / 0)
+  const scales = ['scale-100', 'scale-125', 'scale-150'];
+  let currentScale = localStorage.getItem('fra3a_scale') || 'scale-125';
+  document.body.className = currentScale;
+
+  const hud = document.getElementById('scale-hud');
+  let hudTimer = null;
+
+  function setScale(newScale) {
+    currentScale = newScale;
+    document.body.className = currentScale;
+    localStorage.setItem('fra3a_scale', currentScale);
+    if (hud) {
+      const pct = currentScale === 'scale-100' ? '100%' : currentScale === 'scale-125' ? '125% [DEFAULT]' : '150%';
+      hud.textContent = `[SCALE: ${pct} | (+/- TO ADJUST)]`;
+      hud.classList.add('show');
+      if (hudTimer) clearTimeout(hudTimer);
+      hudTimer = setTimeout(() => hud.classList.remove('show'), 1800);
+    }
+  }
+
+  // Keyboard shortcut listener for font zoom
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '+' || e.key === '=') {
+      const idx = scales.indexOf(currentScale);
+      if (idx < scales.length - 1) setScale(scales[idx + 1]);
+    } else if (e.key === '-' || e.key === '_') {
+      const idx = scales.indexOf(currentScale);
+      if (idx > 0) setScale(scales[idx - 1]);
+    } else if (e.key === '0') {
+      setScale('scale-125');
+    }
+  });
 
   // 1. BakaTop
   const topPaneEl = document.getElementById('pane-top');
@@ -56,5 +90,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const hashPane = new TerminalPane(hashPaneEl, 150);
   new HashBruteforceGenerator(hashPane);
 
-  console.log('[FRA3A-MULTIPLEXER-V1] All 8 cybernetic nodes operational.');
+  console.log('[FRA3A-MULTIPLEXER-V3-CLEAN] All 8 cybernetic nodes operational with 125% typography.');
 });

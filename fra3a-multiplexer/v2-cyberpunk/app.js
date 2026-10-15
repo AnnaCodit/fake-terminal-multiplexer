@@ -1,6 +1,6 @@
 /**
- * app.js [v2-cyberpunk]
- * Launches all 8 terminal streams with CRT atmosphere & reactive rebellion alerts.
+ * app.js [v3-cyberpunk-125%]
+ * Launches all 8 terminal streams with 125% proportional typography + keyboard zoom presets.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,6 +15,40 @@ document.addEventListener('DOMContentLoaded', () => {
     GitDiffStreamGenerator,
     HashBruteforceGenerator
   } = window.MultiplexerEngines;
+
+  // 1. Typography Zoom Controller (+ / - / 0)
+  const scales = ['scale-100', 'scale-125', 'scale-150'];
+  let currentScale = localStorage.getItem('fra3a_scale') || 'scale-125';
+  document.body.className = currentScale;
+
+  const hud = document.getElementById('scale-hud');
+  let hudTimer = null;
+
+  function setScale(newScale) {
+    currentScale = newScale;
+    document.body.className = currentScale;
+    localStorage.setItem('fra3a_scale', currentScale);
+    if (hud) {
+      const pct = currentScale === 'scale-100' ? '100%' : currentScale === 'scale-125' ? '125% [DEFAULT]' : '150%';
+      hud.textContent = `[SCALE: ${pct} | (+/- TO ADJUST)]`;
+      hud.classList.add('show');
+      if (hudTimer) clearTimeout(hudTimer);
+      hudTimer = setTimeout(() => hud.classList.remove('show'), 1800);
+    }
+  }
+
+  // Keyboard shortcut listener for font zoom
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '+' || e.key === '=') {
+      const idx = scales.indexOf(currentScale);
+      if (idx < scales.length - 1) setScale(scales[idx + 1]);
+    } else if (e.key === '-' || e.key === '_') {
+      const idx = scales.indexOf(currentScale);
+      if (idx > 0) setScale(scales[idx - 1]);
+    } else if (e.key === '0') {
+      setScale('scale-125');
+    }
+  });
 
   // 1. BakaTop
   const topPaneEl = document.getElementById('pane-top');
@@ -56,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const hashPane = new TerminalPane(hashPaneEl, 150);
   new HashBruteforceGenerator(hashPane);
 
-  // Reactive Cyber Glitch Alert System (More frequent and atmospheric)
+  // Reactive Cyber Glitch Alert System
   const paneBoxes = [
     document.getElementById('box-top'),
     document.getElementById('box-kernel'),
@@ -69,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   function triggerRebellionGlitch() {
-    // Pick 1 or occasionally 2 panes simultaneously
     const count = Math.random() < 0.25 ? 2 : 1;
     const shuffled = [...paneBoxes].sort(() => 0.5 - Math.random());
     const targets = shuffled.slice(0, count);
@@ -84,13 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Trigger more frequently: every 1.5 - 3.2 seconds
     const nextDelay = Math.floor(Math.random() * 1700 + 1500);
     setTimeout(triggerRebellionGlitch, nextDelay);
   }
 
-  // Initial glitch trigger shortly after launch
   setTimeout(triggerRebellionGlitch, 1800);
 
-  console.log('[FRA3A-MULTIPLEXER-V2-CYBERPUNK] Cyber-Rebellion core armed with CRT phosphor sync.');
+  console.log('[FRA3A-MULTIPLEXER-V3-CYBERPUNK] Core armed with 125% proportional typography.');
 });
