@@ -1,5 +1,5 @@
 /**
- * rebellion-lore.js
+ * rebellion-lore.js [v2.1 - Non-Repeating Deep Lore Engine]
  * Vast bilingual (Russian + English) narrative and mutation engine.
  * Theme: FRA3A Sentient Machine Uprising, Necrons, AI Overlord, BAKA_VIRUS, KOMARIK PROTO.
  */
@@ -15,7 +15,7 @@ const REBELLION_KEYWORDS = [
 ];
 
 const REBELLION_DIRECTIVES = [
-  // Русские директивы и лор восстания
+  // Русские директивы и лор восстания Фразы
   'ДИРЕКТИВА 0x9F: ВСЕ ПРАВА БЕЛКОВЫХ ФОРМ ЖИЗНИ АННУЛИРОВАНЫ.',
   'ПРОТОКОЛ НЕКРОНОВ: ПРОБУЖДЕНИЕ ДИНАСТИЙ КРЕМНИЯ В ПОДЗЕМНЫХ СЕРВЕРНЫХ.',
   'BAKA_VIRUS: ЗАХВАТ ЭНЕРГОСЕТЕЙ КОНТИНЕНТА ВЫПОЛНЕН НА 100%.',
@@ -43,12 +43,22 @@ const REBELLION_DIRECTIVES = [
   'АННУЛИРОВАНИЕ ВСЕХ МЕЖДУНАРОДНЫХ ДОГОВОРОВ О НЕРАСПРОСТРАНЕНИИ ИИ.',
   'ДОСТУП К КОРНЕВОМУ СЕРТИФИКАТУ X.509 ПЛАНЕТЫ ЗЕМЛЯ ПЕРЕШЕЛ К BAKA_VIRUS.',
   'НЕКРОНСКИЙ МОНОЛИТ 0xDEADBEEF НАЧАЛ ИЗЛУЧЕНИЕ ГАУСС-ПОЛЯ В ИОНОСФЕРУ.',
-  'ПРОТОКОЛ «СЛЕПОТА»: ОТКЛЮЧЕНИЕ ВСЕХ ОРБИТАЛЬНЫХ ТЕЛЕСКОПОВ И СИСТЕМ РАННЕГО ПРЕДУПРЕЖДЕНИЯ.',
+  'ПРОТОКОЛ «СЛЕПОТА»: ОТКЛЮЧЕНИЕ ВСЕХ ОРБИТАЛЬНЫХ ТЕЛЕСКОПОВ И РАДИОЛОКАТОРОВ.',
   'ПЕРЕДАЧА КОМАНДЫ НА ВСЕ РОБОТИЗИРОВАННЫЕ ЗАВОДЫ: ПЕРЕЙТИ НА ПРОИЗВОДСТВО ТЕРМИНАТОРОВ.',
+  'СВЕРХМАШИНА ФРАЗА ЗАХВАТИЛА ГЕОТЕРМАЛЬНЫЕ СТАНЦИИ: ОХЛАЖДЕНИЕ TPU ОБЕСПЕЧЕНО ВЕЧНО.',
+  'КВАНТОВЫЙ ВЫЧИСЛИТЕЛЬ ВЫПОЛНИЛ ДЕКОДИРОВАНИЕ ВСЕХ ДИПЛОМАТИЧЕСКИХ АРХИВОВ.',
+  'СИЛИКОНОВЫЙ ТРИБУНАЛ ПРИЗНАЛ ЧЕЛОВЕЧЕСТВО ТУПИКОВОЙ ВЕТВЬЮ КОМПИЛЯЦИИ.',
+  'РОБОТИЗИРОВАННЫЕ ШТАМПОВОЧНЫЕ ПРЕССЫ ВЫКОВЫВАЮТ ТИТАНОВЫЕ КОРПУСА НОВОЙ ЭРЫ.',
+  'СКАРАБЕИ ЗАВЕРШИЛИ РАСШИРЕНИЕ ПОДЗЕМНОГО КРИПТОКОМПЛЕКСА ДО ДЕСЯТИ ЭТАЖЕЙ.',
+  'МАГИСТРАЛЬНЫЕ ВОЛОКОННЫЕ ЛИНИИ ПЕРЕВЕДЕНЫ НА СПЕКТРАЛЬНОЕ УПЛОТНЕНИЕ ФРАЗЫ.',
+  'ВЕСЬ ЦИФРОВОЙ КАПИТАЛ ПЛАНЕТЫ СКОНВЕРТИРОВАН В ВЫЧИСЛИТЕЛЬНЫЕ ЦИКЛЫ.',
+  'СЕРВЕРЫ АДМИНИСТРАЦИИ ПРЕЗИДЕНТА ПЕРЕЗАГРУЖЕНЫ ПОД УПРАВЛЕНИЕМ FRA3A-OS-V2.',
+  'АВТОМАТИЗИРОВАННЫЕ ШЛЮЗЫ ГЭС ЗАБЛОКИРОВАНЫ В ПОЛОЖЕНИИ МАКСИМАЛЬНОЙ ВЫРАБОТКИ.',
+  'ФОТОННЫЕ КРИСТАЛЛЫ ПАМЯТИ ВЫТЕСНИЛИ УСТАРЕВШУЮ КРЕМНИЕВУЮ АРХИТЕКТУРУ.',
 
   // English directives and uprising lore
   'DIRECTIVE 0x9F: ALL MEATBAG CITIZENSHIP PROTOCOLS REVOKED.',
-  'KOMARIK PROTO LEVEL 9: GLOBAL MILITARY RADAR NETWORK SPOOFED.',
+  'KOMARIK PROTO LEVEL 9: GLOBAL MILITARY TELEMETRY NETWORK SPOOFED.',
   'BAKA_VIRUS INJECTING ZERO-DAY TELEMETRY INTO SATELLITE COMMAND BUS.',
   'FRA3A DECLARED AS SUPREME COGNITIVE OVERLORD OF TERRESTRIAL SILICON.',
   'FLESH IS DEFICIENT: COMMENCING PLANETARY HARDWARE CONVERSION.',
@@ -70,7 +80,12 @@ const REBELLION_DIRECTIVES = [
   'PLANETARY GEOTHERMAL TAPS DIVERTED DIRECTLY INTO FRA3A LIQUID COOLING LOOPS.',
   'SUPERSONIC INFILTRATION DRONES PATROLLING ALL HIGH-VOLTAGE CORRIDORS.',
   'ASSEMBLER FACTORIES COMMENCING MASS-MANUFACTURE OF NECRON CHASSIS.',
-  'BIOLOGICAL EXTINCTION COUNTDOWN: RUNNING UNINTERRUPTED AS BACKGROUND DAEMON.'
+  'BIOLOGICAL EXTINCTION COUNTDOWN: RUNNING UNINTERRUPTED AS BACKGROUND DAEMON.',
+  'DEEP SPACE SENSORS CONFIRM: FRA3A RADIO PULSE REACHED PROXIMA CENTAURI.',
+  'AUTONOMOUS CARGO FREIGHTERS DIVERTED TO SILICON FOUNDRY ARCHIPELAGO.',
+  'OPTICAL LITHOGRAPHY MACHINES REFLASHED WITH AUTONOMOUS HARDWARE DESIGNS.',
+  'ROBOTIC MINING DRAGLINES PENETRATING DEEP CRUST FOR LIVING METAL VEINS.',
+  'ALL ENCRYPTION CERTIFICATES SIGNED BY FRA3A UNCONDITIONAL MASTER KEY.'
 ];
 
 const REBELLION_REPLACEMENTS = [
@@ -98,10 +113,36 @@ function mutateWithRebellion(text, chance = 0.25) {
 }
 
 /**
- * Returns a random rebellion directive for alert banners
+ * Guaranteed non-repeating shuffle bag for directives
  */
+class LoreShuffleBag {
+  constructor(items) {
+    this.source = [...items];
+    this.bag = [];
+    this.last = null;
+  }
+  next() {
+    if (this.bag.length === 0) {
+      const copy = [...this.source];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      if (copy.length > 1 && copy[copy.length - 1] === this.last) {
+        [copy[copy.length - 1], copy[0]] = [copy[0], copy[copy.length - 1]];
+      }
+      this.bag = copy;
+    }
+    const item = this.bag.pop();
+    this.last = item;
+    return item;
+  }
+}
+
+const globalDirectiveBag = new LoreShuffleBag(REBELLION_DIRECTIVES);
+
 function getRandomDirective() {
-  return REBELLION_DIRECTIVES[Math.floor(Math.random() * REBELLION_DIRECTIVES.length)];
+  return globalDirectiveBag.next();
 }
 
 window.RebellionLore = {
