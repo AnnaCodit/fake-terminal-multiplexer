@@ -1525,13 +1525,37 @@ class BakaTopGenerator {
     return `${days}d,${hours}:${mins < 10 ? '0' : ''}${mins}`;
   }
 
-  renderMeterBar(pct, width = 8) {
+  renderMeterBar(pct, width = 20) {
     const filled = Math.round((pct / 100) * width);
     const safeFilled = Math.max(0, Math.min(width, filled));
-    const pipes = '|'.repeat(safeFilled);
-    const spaces = ' '.repeat(Math.max(0, width - safeFilled));
-    const colClass = pct > 96.5 ? 'highlight-red' : 'highlight-white';
-    return `[<span class="${colClass}">${pipes}</span>${spaces}]${pct.toFixed(0)}%`;
+    const empty = width - safeFilled;
+
+    // Multi-color tiers like real htop: green for low, yellow for medium, red for high spike
+    const greenCount = Math.min(safeFilled, Math.round(width * 0.55));
+    const yellowCount = Math.min(Math.max(0, safeFilled - greenCount), Math.round(width * 0.30));
+    const redCount = Math.max(0, safeFilled - greenCount - yellowCount);
+
+    let barHtml = '';
+    if (greenCount > 0) barHtml += `<span class="highlight-green">${'|'.repeat(greenCount)}</span>`;
+    if (yellowCount > 0) barHtml += `<span class="highlight-yellow">${'|'.repeat(yellowCount)}</span>`;
+    if (redCount > 0) barHtml += `<span class="highlight-red">${'|'.repeat(redCount)}</span>`;
+    const spaces = ' '.repeat(empty);
+
+    const valStr = pct.toFixed(1).padStart(5, ' ');
+    return `[${barHtml}${spaces}] ${valStr}%`;
+  }
+
+  renderMemBar(usedGB, totalGB, width = 12) {
+    const pct = (usedGB / totalGB) * 100;
+    const filled = Math.round((pct / 100) * width);
+    const safeFilled = Math.max(0, Math.min(width, filled));
+    const greenCount = Math.min(safeFilled, Math.round(width * 0.65));
+    const yellowCount = Math.max(0, safeFilled - greenCount);
+
+    const barHtml = `<span class="highlight-green">${'|'.repeat(greenCount)}</span>` +
+                    `<span class="highlight-yellow">${'|'.repeat(yellowCount)}</span>`;
+    const spaces = ' '.repeat(width - safeFilled);
+    return `[${barHtml}${spaces}] ${usedGB.toFixed(0)}G/${totalGB.toFixed(0)}G`;
   }
 
   update() {
@@ -1568,10 +1592,13 @@ class BakaTopGenerator {
       ? ' <span class="highlight-red">[OVERCLOCK]</span>' 
       : '';
 
-    // Sleek 2-line header: zero blank lines, zero wrapping
+    // Prominent, animated htop meters on dedicated lines
     let html = `<div class="top-header">` +
-      `<div class="top-row">top - ${timeStr} up ${this.formatUptime(this.uptimeSeconds)} | 4C @ ${avgCpu}% | RAM ${(memUsed/1024).toFixed(0)}G/${(memTotal/1024).toFixed(0)}G${alertStatus}</div>` +
-      `<div class="top-row">0 ${this.renderMeterBar(this.cores[0], 7)} 1 ${this.renderMeterBar(this.cores[1], 7)} 2 ${this.renderMeterBar(this.cores[2], 7)} 3 ${this.renderMeterBar(this.cores[3], 7)}</div>` +
+      `<div class="top-row">0 ${this.renderMeterBar(this.cores[0], 20)}  Tasks: 412, 18 thr${alertStatus}</div>` +
+      `<div class="top-row">1 ${this.renderMeterBar(this.cores[1], 20)}  Load:  3.84 3.92 3.78</div>` +
+      `<div class="top-row">2 ${this.renderMeterBar(this.cores[2], 20)}  Mem:   ${this.renderMemBar(memUsed / 1024, memTotal / 1024, 12)}</div>` +
+      `<div class="top-row">3 ${this.renderMeterBar(this.cores[3], 20)}  Swp:   ${this.renderMemBar(4.2, 64.0, 12)}</div>` +
+      `<div class="top-row">top - ${timeStr} up ${this.formatUptime(this.uptimeSeconds)} | 4C @ ${avgCpu}% | FRA3A CORE</div>` +
       `</div>` +
       `<div class="top-table">` +
       `<div class="top-table-head"><span class="col-pid">PID</span> <span class="col-user">ПОЛЬЗ</span> <span class="col-s">S</span> <span class="col-cpu">%CPU</span> <span class="col-mem">%MEM</span> <span class="col-time">ВРЕМЯ</span> <span class="col-cmd">КОМАНДА</span></div>`;

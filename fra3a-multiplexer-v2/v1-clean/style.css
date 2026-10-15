@@ -113,28 +113,27 @@ html, body {
   font-size: 12px;
 }
 
-/* Top Pane Table Layout (Ultra-Compact, Zero Wrapping, No Wasted Gaps) */
+/* Top Pane Table Layout (Authentic prominent htop meters & full terminal font) */
 #pane-top {
-  white-space: nowrap;
+  white-space: pre;
+  font-size: 12.5px;
 }
 
 #pane-top .top-header {
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   border-bottom: 1px dashed #282828;
-  padding-bottom: 2px;
+  padding-bottom: 3px;
 }
 
 #pane-top .top-row {
-  margin-bottom: 1px;
-  font-size: 11px;
-  line-height: 1.15;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 2px;
+  font-size: 12.5px;
+  line-height: 1.25;
+  white-space: pre;
 }
 
 #pane-top .top-table {
-  font-size: 10.5px;
+  font-size: 12px;
   display: flex;
   flex-direction: column;
 }
@@ -142,16 +141,16 @@ html, body {
 #pane-top .top-table-head {
   color: #777777;
   border-bottom: 1px solid #222222;
-  padding-bottom: 1px;
-  margin-bottom: 1px;
+  padding-bottom: 2px;
+  margin-bottom: 2px;
   font-weight: bold;
-  line-height: 1.15;
-  white-space: nowrap;
+  line-height: 1.25;
+  white-space: pre;
 }
 
 #pane-top .top-table-row {
-  white-space: nowrap;
-  line-height: 1.15;
+  white-space: pre;
+  line-height: 1.25;
   overflow: hidden;
   text-overflow: ellipsis;
 }
