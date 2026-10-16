@@ -69,7 +69,8 @@ body.scale-150 {
   --col-time-w: 82px;
 }
 
-html, body {
+html,
+body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -222,17 +223,64 @@ html, body {
   text-overflow: ellipsis;
 }
 
-.col-pid { display: inline-block; width: var(--col-pid-w); color: #aaaaaa; }
-.col-user { display: inline-block; width: var(--col-user-w); color: #ffffff; }
-.col-pr { display: inline-block; width: 28px; }
-.col-ni { display: inline-block; width: 32px; }
-.col-virt { display: inline-block; width: 50px; }
-.col-res { display: inline-block; width: 50px; }
-.col-s { display: inline-block; width: var(--col-s-w); color: #4ea868; }
-.col-cpu { display: inline-block; width: var(--col-cpu-w); }
-.col-mem { display: inline-block; width: var(--col-mem-w); }
-.col-time { display: inline-block; width: var(--col-time-w); }
-.col-cmd { display: inline-block; color: #e0e0e0; font-weight: 500; }
+.col-pid {
+  display: inline-block;
+  width: var(--col-pid-w);
+  color: #aaaaaa;
+}
+
+.col-user {
+  display: inline-block;
+  width: var(--col-user-w);
+  color: #ffffff;
+}
+
+.col-pr {
+  display: inline-block;
+  width: 28px;
+}
+
+.col-ni {
+  display: inline-block;
+  width: 32px;
+}
+
+.col-virt {
+  display: inline-block;
+  width: 50px;
+}
+
+.col-res {
+  display: inline-block;
+  width: 50px;
+}
+
+.col-s {
+  display: inline-block;
+  width: var(--col-s-w);
+  color: #4ea868;
+}
+
+.col-cpu {
+  display: inline-block;
+  width: var(--col-cpu-w);
+}
+
+.col-mem {
+  display: inline-block;
+  width: var(--col-mem-w);
+}
+
+.col-time {
+  display: inline-block;
+  width: var(--col-time-w);
+}
+
+.col-cmd {
+  display: inline-block;
+  color: #e0e0e0;
+  font-weight: 500;
+}
 
 /* Neural Pane (Column 2) Clean Word Wrapping */
 #pane-neural .term-line {
@@ -290,8 +338,15 @@ html, body {
 }
 
 @keyframes blink-caret {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 /* On-Screen Scale Notification HUD */

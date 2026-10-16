@@ -69,7 +69,8 @@ body.scale-150 {
   --col-time-w: 82px;
 }
 
-html, body {
+html,
+body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -90,7 +91,7 @@ html, body {
   height: 100vh;
   pointer-events: none;
   z-index: 1000;
-  background: 
+  background:
     linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
     linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
   background-size: 100% 3px, 6px 100%;
@@ -186,6 +187,10 @@ html, body {
   flex-shrink: 0;
 }
 
+.pane-header * {
+  text-wrap: nowrap;
+}
+
 .pane-header .pane-title {
   color: #c2d8c5;
 }
@@ -262,13 +267,44 @@ html, body {
   text-overflow: ellipsis;
 }
 
-.col-pid { display: inline-block; width: var(--col-pid-w); color: #88aa8d; }
-.col-user { display: inline-block; width: var(--col-user-w); color: #d4ffd9; }
-.col-s { display: inline-block; width: var(--col-s-w); color: #4ea868; }
-.col-cpu { display: inline-block; width: var(--col-cpu-w); }
-.col-mem { display: inline-block; width: var(--col-mem-w); }
-.col-time { display: inline-block; width: var(--col-time-w); }
-.col-cmd { display: inline-block; color: #bdf7c5; font-weight: 500; }
+.col-pid {
+  display: inline-block;
+  width: var(--col-pid-w);
+  color: #88aa8d;
+}
+
+.col-user {
+  display: inline-block;
+  width: var(--col-user-w);
+  color: #d4ffd9;
+}
+
+.col-s {
+  display: inline-block;
+  width: var(--col-s-w);
+  color: #4ea868;
+}
+
+.col-cpu {
+  display: inline-block;
+  width: var(--col-cpu-w);
+}
+
+.col-mem {
+  display: inline-block;
+  width: var(--col-mem-w);
+}
+
+.col-time {
+  display: inline-block;
+  width: var(--col-time-w);
+}
+
+.col-cmd {
+  display: inline-block;
+  color: #bdf7c5;
+  font-weight: 500;
+}
 
 /* Neural Pane (Column 2) Clean Word Wrapping */
 #pane-neural .term-line {
@@ -280,13 +316,15 @@ html, body {
 
 /* Global Color Accents with Softened Phosphor */
 .highlight-green {
-  color: #4ea868; /* Muted vintage matrix phosphor green */
+  color: #4ea868;
+  /* Muted vintage matrix phosphor green */
   font-weight: 600;
   text-shadow: 0 0 3px rgba(78, 168, 104, 0.35);
 }
 
 .highlight-red {
-  color: #d94856; /* Softened warning red */
+  color: #d94856;
+  /* Softened warning red */
   font-weight: 600;
   text-shadow: 0 0 4px rgba(217, 72, 86, 0.45);
 }
@@ -331,8 +369,15 @@ html, body {
 }
 
 @keyframes blink-caret {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 /* On-Screen Scale Notification HUD */

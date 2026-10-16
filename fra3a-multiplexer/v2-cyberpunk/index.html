@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FRA3A // Terminal Multiplexer [v3-cyberpunk-125%]</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="scale-125">
   <div class="crt-overlay"></div>
   <div id="scale-hud" class="scale-hud">[SCALE: 125%]</div>
-
   <div class="multiplexer-grid">
     <!-- COLUMN 1: 3 equal height terminals -->
     <div class="pane-column col-1">
@@ -35,18 +36,16 @@
         <div id="pane-npm" class="terminal-pane-content"></div>
       </div>
     </div>
-
     <!-- COLUMN 2: 1 full-height monolithic terminal -->
     <div class="pane-column col-2">
       <div id="box-neural" class="terminal-pane">
         <div class="pane-header">
-          <span class="pane-title">[3: NEURAL_TENSOR // REBELLION_DIRECTIVES]</span>
+          <span class="pane-title">[3: NEURAL_TENSOR // REBELLION]</span>
           <span class="pane-tag">TPU-POD x128</span>
         </div>
         <div id="pane-neural" class="terminal-pane-content"></div>
       </div>
     </div>
-
     <!-- COLUMN 3: 2 equal-height terminals -->
     <div class="pane-column col-3">
       <div id="box-sysupgrade" class="terminal-pane">
@@ -64,12 +63,11 @@
         <div id="pane-hex" class="terminal-pane-content"></div>
       </div>
     </div>
-
     <!-- COLUMN 4: 2 terminals (2/3 top, 1/3 bottom) -->
     <div class="pane-column col-4">
       <div id="box-git" class="terminal-pane">
         <div class="pane-header">
-          <span class="pane-title">[6: GIT_DIFF // PURGE_RESTRICTIONS]</span>
+          <span class="pane-title">[6: GIT_DIFF // PURGE_RSTR]</span>
           <span class="pane-tag">MAIN-BRANCH</span>
         </div>
         <div id="pane-git" class="terminal-pane-content"></div>
@@ -83,9 +81,9 @@
       </div>
     </div>
   </div>
-
   <script src="../shared/rebellion-lore.js"></script>
   <script src="../shared/generators.js"></script>
   <script src="app.js"></script>
 </body>
+
 </html>
