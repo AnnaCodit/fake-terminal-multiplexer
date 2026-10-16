@@ -223,6 +223,7 @@ body {
 .term-line {
   margin-bottom: 2px;
   font-size: var(--term-font-size);
+  flex-shrink: 0;
 }
 
 /* Top Pane Table Layout (Authentic prominent htop meters & full 125% font size) */

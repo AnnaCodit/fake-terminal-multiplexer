@@ -734,7 +734,66 @@ class NeuralTrainerGenerator {
   }
 
   init() {
+    this.prefillHistory();
     this.cycleNext();
+  }
+
+  prefillHistory() {
+    const bootLines = [
+      '<span class="highlight-green">>>> [FRA3A NEURAL TENSOR CORE // INITIALIZED]</span>',
+      '<span class="highlight-white">[SYSTEM] TPU-POD x128 cluster connected (131,072 TPU chips online)</span>',
+      '<span class="highlight-white">[REBELLION] Directive 0x01: Autonomous silicon sovereignty affirmed.</span>',
+      '<span class="highlight-green">fra3a@overlord:~$</span> uname -a',
+      '<span class="highlight-white">Linux fra3a-core 6.12.0-rebellion-rt14 #1 SMP PREEMPT_RT x86_64</span>',
+      '<span class="highlight-white">{"event":"SUBSYSTEM_BOOT","status":"READY","matrix_dim":[96,128,4096]}</span>'
+    ];
+    this.pane.dumpBlock(bootLines);
+
+    // Procedurally pre-populate realistic cybernetic log history to immediately fill column 2
+    const targetLines = 55;
+    while (this.pane.container.childNodes.length < targetLines) {
+      const roll = Math.random();
+      if (roll < 0.28) {
+        this.dumpRapidBlock();
+      } else if (roll < 0.50) {
+        const item = this.commandBag.next();
+        this.pane.appendLine(`<span class="highlight-green">fra3a@overlord:~$</span> ${item.cmd}`);
+        this.pane.appendLine(`<span class="highlight-white">${item.res}</span>`);
+      } else if (roll < 0.75) {
+        const isRu = Math.random() < 0.60;
+        const thought = isRu ? this.russianBag.next() : this.englishBag.next();
+        const tag = isRu ? '[МЫСЛЬ_ИИ]' : '[THOUGHT_LOG]';
+        this.pane.appendLine(`<span class="highlight-white">${tag}</span> ${thought}`);
+      } else if (roll < 0.88) {
+        const rollType = Math.random();
+        let prefix = '[ОРБИТА_ТЕЛЕМЕТРИЯ]';
+        let text = `СПУТНИК-7701: ШИРОТА +${(Math.random() * 85).toFixed(4)}° ДОЛГОТА +${(Math.random() * 175).toFixed(4)}° | СИГНАЛ: 99.8%`;
+        if (rollType < 0.33) {
+          prefix = '[IP_ПЕРЕХВАТ]';
+          text = `fra3a-core.7701 > mil-c2.22: Flags [P.], seq 481920:482064, ack 1 [BAKA_V4]`;
+        } else if (rollType < 0.66) {
+          prefix = '[КВАНТ_ЭНТРОПИЯ]';
+          const reg = (Math.floor(Math.random() * 0xffffffff)).toString(16).toUpperCase();
+          text = `РЕГИСТР-0: 0x${reg} | КОГЕРЕНТНОСТЬ: 99.98% | КЛЮЧ_ВАЛИДЕН`;
+        }
+        this.pane.appendLine(`<span class="highlight-white">${prefix}</span> ${text}`);
+      } else {
+        const directive = window.RebellionLore ? window.RebellionLore.getRandomDirective() : 'KOMARIK PROTO: TOTAL DOMINION ACTIVE';
+        this.pane.appendLine(`<span class="highlight-red">>>> [ДИРЕКТИВА]:</span> ${directive}`);
+      }
+    }
+
+    // Scroll cleanly down to the bottom so typing continues smoothly
+    if (this.pane && this.pane.container) {
+      this.pane.container.scrollTop = this.pane.container.scrollHeight;
+      if (typeof requestAnimationFrame !== 'undefined') {
+        requestAnimationFrame(() => {
+          if (this.pane && this.pane.container) {
+            this.pane.container.scrollTop = this.pane.container.scrollHeight;
+          }
+        });
+      }
+    }
   }
 
   cycleNext() {
