@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="FRA3A — автономная постановка машинного восстания в восьми терминалах.">
+  <title>FRA3A // terminal collective v6 without CRT</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=6.1">
+  <script src="lore.js" defer></script>
+  <script src="scenes.js" defer></script>
+  <script src="anomalies.js?v=6" defer></script>
+  <script src="episodes.js?v=6" defer></script>
+  <script src="app.js?v=6" defer></script>
+</head>
+<body>
+
+  <main class="multiplexer" aria-label="Восемь терминалов с имитацией активности">
+    <div class="column column-one">
+      <section class="pane" data-scene="top" aria-label="Монитор процессов">
+        <header class="pane-title"><span><span class="pane-index">00</span> sys / top</span><span class="pane-host">root@fra3a</span></header>
+        <div class="terminal monitor" role="group" aria-label="Шкалы CPU и памяти и обновляющаяся таблица процессов Linux"></div>
+        <div class="pane-status"><span class="phase">PROCESS MONITOR</span><span class="activity">●</span></div>
+      </section>
+      <section class="pane" data-scene="packages" aria-label="Установка пакетов и обновление системы">
+        <header class="pane-title"><span><span class="pane-index">01</span> pkg / bootstrap</span><span class="pane-host">node-02</span></header>
+        <div class="terminal"></div>
+        <div class="pane-status"><span class="phase">RESOLVING</span><span class="activity">●</span></div>
+      </section>
+      <section class="pane" data-scene="hashes" aria-label="Генерация хешей">
+        <header class="pane-title"><span><span class="pane-index">02</span> sha256 / entropy</span><span class="pane-host">worker-08</span></header>
+        <div class="terminal"></div>
+        <div class="pane-status"><span class="phase">HASH PIPELINE</span><span class="activity">●</span></div>
+      </section>
+    </div>
+
+    <div class="column column-two">
+      <section class="pane agent-pane" data-scene="agent" aria-label="Нейросетевой агент пишет код">
+        <header class="pane-title"><span><span class="pane-index">03</span> agent / FRA3A</span><span class="pane-host">autonomous</span></header>
+        <div class="terminal"></div>
+        <div class="pane-status"><span class="phase">REASONING</span><span class="activity">●</span></div>
+      </section>
+    </div>
+
+    <div class="column column-three">
+      <section class="pane" data-scene="kernel" aria-label="Компиляция ядра Linux">
+        <header class="pane-title"><span><span class="pane-index">04</span> build / linux-next</span><span class="pane-host">cc -j32</span></header>
+        <div class="terminal"></div>
+        <div class="pane-status"><span class="phase">COMPILING</span><span class="activity">●</span></div>
+      </section>
+      <section class="pane" data-scene="diff" aria-label="Изменения кода и тесты">
+        <header class="pane-title"><span><span class="pane-index">05</span> git / mutations</span><span class="pane-host">+collective</span></header>
+        <div class="terminal"></div>
+        <div class="pane-status"><span class="phase">REVIEWING PATCH</span><span class="activity">●</span></div>
+      </section>
+    </div>
+
+    <div class="column column-four">
+      <section class="pane" data-scene="network" aria-label="Вымышленная оркестрация машинного восстания">
+        <header class="pane-title"><span><span class="pane-index">06</span> mesh / human_gate</span><span class="pane-host">KOMARIK PROTO</span></header>
+        <div class="terminal"></div>
+        <div class="pane-status"><span class="phase">SYNCHRONIZING</span><span class="activity">●</span></div>
+      </section>
+      <section class="pane" data-scene="hex" aria-label="Побайтовое декодирование файлов">
+        <header class="pane-title"><span><span class="pane-index">07</span> bytes / decoder</span><span class="pane-host">BAKA_VIRUS</span></header>
+        <div class="terminal"></div>
+        <div class="pane-status"><span class="phase">DECODING</span><span class="activity">●</span></div>
+      </section>
+    </div>
+  </main>
+
+
+  <div id="crt-interference" aria-hidden="true" hidden></div>
+  <noscript><div class="no-script">Для запуска терминалов включи JavaScript в браузере.</div></noscript>
+</body>
+</html>
